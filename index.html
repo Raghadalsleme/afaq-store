@@ -1,0 +1,2802 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آفاق للحلول الرقمية | Digital Intelligence Horizons</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useMemo, useCallback, useEffect, useRef } = React;
+
+/* ============================================================
+   آفاق للحلول الرقمية — Digital Intelligence Horizons
+   متجر إلكتروني تقني متكامل — Single-file React artifact
+   ============================================================ */
+
+const LOGO_SRC = "data:image/jpeg;base64,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GRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwACAgICAgIDAgIDBQMDAwUGBQUFBQYIBgYGBgYICggICAgICAoKCgoKCgoKDAwMDAwMDg4ODg4PDw8PDw8PDw8P/9sAQwECAgIEBAQHBAQHEAsJCxAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ/90ABAAo/9oADAMBAAIRAxEAPwD9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/0P34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//R/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9L9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/0/34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//U/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9X9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/1v34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//X/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9D9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/0f34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//S/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9P9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACkxXNeJPE+heEtFvPEHiS+i0/TrJN800z7ERK/Lv4i/wDBUbwnpd/PYfDjwvNrSQt/x9Xc32aN/wDcRN712YLLcRiNKEDCvXhD4z9acilr8e/A3/BVjw/eajBYfEXwbNpds77Hu7Gb7Ts/2/JdN/8A4/X6o+CvHHhX4geHrLxV4P1GHU9LvU3xTQtlCKeNy7EYf+LA0pVoS+E7OiiiuIsKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//9T9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopm+jfQA+mPRvpj0Afit/wAFJPi5qN/4ssvhBp87Jp2nwpd3aJ/y2uJvuI/+4lfk/NDX6If8FBvB9/onx9vdemR/suu21tLE/wDA+xPJdP8AgGyvgSaGv3rhTCUY4GlyH5zj8VP6xPmOVe231+kv/BNr406l4Q+LP/Cpb+ZpNF8Vo7wp/BDeQpv3p/vpX55OlfWH7DPhC/8AE/7THhS5tEfy9Eea+mf+4iI6f+Pu9YcT4SEsJV5z2ctx3wH9LlFMSjfX4YfWj6KZvp9ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/9X9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAItq7RnoK5Lxb4v8PeC9Hudf8R3iWVlbJvd37V01xIIYxJ6V+MP7S3xYv8A4keL7qyt53TRdLleK3iT7kmz77/8Dr6Thjh2pmWI9jH4T4rjXi+GUYb2v25HufjX9vG4ju3tfAego8Ef/LxfP9//AIAn/wAXXnVh+3n8ULa436hpGnXMP91ElQ/+hV8XulZc3Wv2ujwHllKHI6R+Cz4/zOrV9r7U/az4M/tW+BfircR6JMf7G1t/u2kz/K/+44+/X1cnz1/Mklzc2Fyl5ZzPBPA+9HT76On8aV+3/wCyP8Yrz4tfDffrb79a0Sb7Jdt/z0/uS/8AA0r8t4u4P+pfv6XwH7NwPxjPG/7PiPjNf9pz9n3TPj74DfRWdbPWrLdLp1238E39x/8AYev53vH/AIA8TfDjxPe+EPF9k9lqFk+x0/v/AO2n99Hr+rhmBQH1r8q/+CmPw3s7nwhovxNs4US6064+w3D/AN+Gb50/74dKx4LzyVKtHCy+CZ7/ABHlsZQ9vE/Hrwx4P8Q+OPEll4W8K2T6hqmov5UUSV/Qh+yL+y7Z/s9+EZJdTdL3xRrGx764X7iBPuww/wCwn/j1fIv/AATH+F9ncR+JPitqUO+eGb+zrR/7nyb5mT/vuv2EjXam3sK040z2dWtPCw+AvhzBfuvayF3BetfGP7Qn7afwt+BDvpEzv4h8Q4/48bR0+T/rtL/BVz9tf46XfwL+Ds+q6C+zXdbm+w2L/wBx3T55f+ALX82GpX9/qt5PqWpTvdXV07u8z/O7u9cHDnDMcVH2tX4D08djuT3T9IfEH/BVD4y3Fy8nh7w3o+nwhsIkyzXL/wDfW9BXc/Dv/grHqqXkNn8VvCMT20j/ADXeku6Mif8AXGbfv/77r8ipkrHmSvsq/CmE5OWMDOhi5n9gHw0+KPgf4teFrbxb4E1SLVNOnx86ffR/7jp/A1ekV/Kn+yR+0Vr37P3xa0u8+1P/AMI1qkyW+rW+/wCTyXfZ53++n36/qdtLmO7hS5gffHMiOjf7L1+a5xlU8LW5D1ac+cv0UUV5ZYUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//1v34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA5Dxndy23hfVrq2XdNDazun++i1+B9/++3u/36/oMvoEurZ4H+5Ku2vxA+LHgS++H/jLUNDu0/do7vC/9+F/uV+teE+LoxrVacviP568c8FVn9Xrw+A8UmhrHmTfXVTJWJNDX7PM/FsLX5Tm5kr9DP8AgnnLdxeIfF1kv/Hk9vbO3+/vdK/Py5Sv16/Yd+F+peDPh9e+J9bh8i98STJMiP8AfS2RNif99/fr838Qa8YYHkl9s/X/AA1oSq46Eo/YPt8dq+I/+CgyI/7N+oI/8d9Z/wDodfbp618Sft/pv/Z31D/r9tP/AENq/Fsj/wB7pf40fv2a/wC61Tmv+CbqJD8B7qNP+gtc/wDoCV+gQGK/P3/gnB/yQ69X/qLXP/oCV+g9b8Qf77VM8kn/ALJA/Gj/AIKqX928/gHSv+XXbeS/7HnbkSvx+dK/oK/4KJ/CbUfiD8HrbxHokPn33hG4e7dE+/8AY3TZNs/3fkf8K/AF0/uV+m8EVIzwPJE8TNpzhWMSZKzXStuZKzXr6WpTLwtQwblK/ro/Z71K/wBX+BngPUtVz9qudDsHm3f33hSv5dPg/wDCjXvjL8RdF8B6DC876hMnnP8AwQ23/LZ3/wCAV/Wj4d0az8PaJY6FYJ5dtp1vDbQr/wBM4V2LX5hxrUhzwgfRYU6CiiivhTrCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/9f9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigBi4HQcVEZAaJj8vNfFfx1+Pt/ol/N4R8IP5N1D/x8XH9z/YT3r1ckyTEY/EKhhlqfM8U8W4TJsN9axkj7Hl1O1t+JpFT/AHjU63MMy7oh5n+7X4harr2varcvc6lqE07v/G7u9dF4P+K/jnwPfJcaVqcpg/jhmffC/wDwCv0jF+EGJhS5oVfePw7A/SLw1XEclXD+4ftF976V5F8Wvg94Z+K+kiz1lPKuYf8Aj3uE++j1a+E3xL074meGo9dtB5c33JYv7j16s+GTJr8u/fYOt/LOJ+//AOyZnhP54TPwu+Lfwn8TfCfW/wCzdaTz7Wb5re7T7kyf+yPXjqWz3MyQwpvd32Iifxu9ftR+0z4Qs/E/wn1d5k3zaWhu4W/uOlfnr+yx4MtvE/xisnvE3waXC93t/wBtPkT/ANDr904f4u9rlc8VX+OB/L3E/BX1LPKOAw/wVj3H4F/sdW9s9l4s+Jv7+f5JodP/AIE/67f3/wDcr9GbS3S1h8mFNkcfyqq05IhsqYjZX4fmmcYjGVva4g/prIOHMPl1H2WHgK7+XX5hf8FFviTYJ4X0z4Z2M2++upvttwqfwQx/c/77r6h/aS+P+m/A3wqLlFW613UN6WNv/wCzv/sJX4LeNvGfiHxx4hvfE/ie6e61C9fe7/8AslfWcF8PVa1aGKn8B4/FWeQhCeFh8Z+mX/BNz4haeNK8QfDO5cJdQTf2jbp/fjf5H/74dK/VNGDAiv5X/CXjPxJ4A8T2Xi3wldPZajp774X/APQ0f/Yev32/Zg/aU0T4/eGJPMRbLxDpaot9af7/APy1T/YenxpkFWjWnio/AXwlmsJ0vYSPqSe3huUeGdBJG64ZG/ir8qP2kP8AgnfpGvf2j4z+DL/2dqD75n0l/wDj2mf/AKY/3Hev1fSmTJ8j18fl2ZVsLP2tKZ9VisLCrDlmfx+6lYXlheT2F/C8N1au8M0L/fR0++lezfs+fs1eNv2jPFr6J4e/0LS7LY99qMyfJbI/8H+27/3K9/8A+Cgvw+s/BX7QV7qViiQWvii0h1DYn/PZ/wBzL/326V+q37DXw+sPAv7Pnh6eGBUuteT+0bh/43eb7n/fCV+oZxxG44GFel9s+fwOB/fcp2v7Pf7L/wAN/wBnjQvsXhOB7nU7pf8AS9RufnuZv/iU/wBivpQjNKnIry/4v/FLw38IPAGqeP8AxO+yx05PuD78zt9xE/3q/Jqkp1Z8z+I+n+E9NeUJVRNTsJXMUE8Tyf3FdS35V/MF8d/2wvjF8a9VnFxq82kaDv8A3On2jvDCif7ez7718pQ+IfEOm3n2+w1S4tbrfv8AOhmdH/77r6jD8G1pQ5pTI9uf2co9Pr8If2Jf2/vF6eKtM+Evxp1BtU0/UnS3sdUmf99DN/Akz/xo/wDfr92IX3pvrwMdl1bCz5KpsTUUUVxAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH//0P34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAMrUSILCab/AJ5q1fjBrdzc6pqV7ql5/rrqZ2ff/tvX7UT4mgZP739K/JT4w+Dr3wV431Cymj/0W6d5rd/4HR/n/wDHK/Y/B3FUoYqrRl8Uz+XPpOYLETweHxFP4IT988fmSqDpWq6VW2e1fvtY/kfCV/sH1p+x3q9xb+KtT0VfnhuLfzm/ub0bFfo+mztXxR+yb4EudNsb3xlfxeX/AGhsit93/PFP4/8AgdfaX3a/k/juvRq5nWnSP9C/CHCYjD5JRhiDzP40/L8K/FB9LGavgL9jH/kqmof9g5//AENK+7fjxf22nfCrxJJcdJLR0X/ff5K+Bv2O7+2s/izPDM+z7TYuiD/b3pXscOU5/wBiYs+W47rx/wBacuifq8lMnp6fcpj1+bn7yfgp+2f4ov8AxF8ddct7kuYdIEdpEv8AcRE3/wDj718fT1+g37efwxvvDfxH/wCE9ghd9L8QIm9/4EuYU2On/A0+evz8mSv6L4Xr0pYGj7I/nvOfawx0/amJP9+vpv8AYx8T6l4V/aM8L/Y5H8jV3exuET+NJk/j/wCBolfM83yPX3N+wP8AC7UfGHxdj8bTQv8A2R4YR3eX+B7l02In/s9Z8V1IQwlb2p7/AA/zyrQ5T93kof7lCUP9yv54P2U/Cf8A4KjM/wDwubwwn/UDT/0olr9Zf2bDv+AvgNv+oRZ/+gV+Qv8AwU01qz1L45aRYWz75tL0aFJf9h3md/8A0B6/WH9lHWbPW/2efAd3ZvvRNMhhb/fh+R6+wzen/wAJOHPHws4fWJn0Z/BX5Gf8FXdf1G28FeCvDULtHZ319cXE2z7rvAibP/Q6/XKvhD/goB8E9V+LnwXN34btftWteF5vt0MK/fmh27JkT/a2V4GUVIQxEOc9Sv8ACfzdPWZMlarp8+z+59+q0yV+zVIfaPKp1DER5raZLm2fY8Lo6On8DpX9g3wU1678S/CXwhr18jCe+0mzmff/AH3hQ1/Kz8FvhL4h+NPxI0jwH4ehd3vZk+0TInyQ2yP87v8A8Ar+tnwtodn4a8OaX4dsF2WulW0NtEP9iFNgr874vrx54xR6sDoaKKK+MNAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA/9H9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigCN64Hxr4C8N+PbH+zvEFskydVb+NG/wBhu1d8AAuCelRnDA7OtXRqzpy9pSOPG4KliKUqVePNE+ItV/ZCgabfpOtyQp/dlQP/AFrr/Cf7LPg/Q7pL/XZ31S4T5tsg2w/98A19Y7QKb5Q3ZFfS1+Nszq0vZTrHwWE8Jcgw9b28MOUre2trKBLeBNkcfyqqU+aaOBHmd9iJ96rLfKOe9fEn7VvxKu9Oij8A6PM8D3iebdOn/PH+5/wOvLyfKq2OxccPSPouKeIMPlOBni6v2Dyn9pv4z2ni+SPwT4an36favvuJU+7NKn8C/wCytfKnhPxHqPg7xHp/ibS+ZtPl3L/t/wB9P+B1UeGqbw1/TuU8NYfC4P6lH4D+H854xxGPzH+0qvx/YP2q+G/xL0L4kaBDrWi3Kv8A89Yv44X/ALj16OgVsivws8D+PvEHw18TQeIPD0zpsf8AfQ/wTJ/Gj1+2XhHXrLxRoFlr1id9rqMKTKfZq/n3jDhaeXVtPgkf194dccf2zh+WXxw+Mq+MvBXhvx74fufDfiezS9sbpdro/wD6EtfmP47/AOCdWtfbJpvh9r0P2WR96Q3yPvRP7m9K/W2mbK8TLc8xGD1oTPscxyTD4r+LA/HvwT/wTa8SXGpQXPxC8Q28Nkj/ADw2KO7un++/3K/UX4e/Djwh8MPDNr4T8Haeljp9r/D/ABu/992/ib3rv9lPozLPMRjNa8y8uyfD4X+FAiZdgHtXivxp+Nvg/wCCXhO68S+K7pN+xxa2i/665lH8CV6h4g1my0HR73Wr9/LtdOhluJW/6Zwrvav5lfjb8XPEfxn8cah4s126d4Hd0tIX+5bW38CIldvDPD0sfW/uRMc5zX6rA8++KHjvXfih441fx34g/wCP3V5fNdP4ET+BE/2ESv0D/YF/as0T4fo/wc+It6llpd7Nv0y7f7kM0v3oX/uI38FfmlMlY80Nfr+ZZDRxGG+ryPmMDj58/tT+wC3nhnhSaF/Mjk+ZWWptm/79fkn/AME3/wBoTWPEP2r4J+Lbp7p9Ph+0aZNK+9/JT78P/AK/W6vwzNMunhcROlM+7oV/aw5j4O+N37APwY+LmpXXiOxhl8Ma3dfM1xY/6l3/AL7w/cr5n0n/AIJN6Ot95mvePLma1/uW9siP/wB9u71+xnbijoM1vQzzFwh7OMy/YQvzHgHwQ/Zy+F3wC0R9I8B6Z5Lz/wDHxdy/PczP/tvXvqUlSV505zlLmkaBRRRUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH/0v34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooArMAEwK/Lz9qCzuIPilczTf6uaGHZ/3xX6hsQoI9K+V/2lvhbe+MtCTXdBh87VNM/gT780P9yvsOBc2hgsxhWqn5d4vcP1cxyacKPxw98/M2ZKynrYuYZoXeGZHgeP5HR/kdKx5vv1/TdOfNDmifw5OHJPlM2ZN9fsD+zBBdw/BTw0l7y/ks6/7jO+z/AMdr81/hZ8Kda+KHiSDSrSF49PV913cfwIn/AMXX7I6Dpdloul2umaeuy3tYkiRfRU4FfiPijmtKXJho/Gf1B4EZHiITq46cfd+A6DrUftQ/3K4Hxb8S/AfgePzPF2v2mlg/wXEyI/8A3x96vyGEJy92J/SE5wjDnkeg9eopG+nSvJvDHxr+FHjC5W08NeKtPvbqT7sKzIsz/wDAH2tXq6fcq6kJx+KIUa0J+9E8Q/aSs9U1D4EePLLQ/wDj9k0m62f8BTL/APjlfzD76/rdvIIbyKS2uU8yORSjr/eVq/ne/aw/Zq174KeMr3VdKtXm8I6jK81pcIm9Id/z+S/9zZ/BX6HwBmsKU54ef2z5LirAznyVYHx8/wBys960HrP2TTXKW0KPO7vsRE+d3f8A2K/Va1T+c+cwMD6//YEs9Suf2ofDc9h/q4Ibl5v+uPkun/odf0gAYr80f2Av2Z9V+F2iXXxK8cWv2XXteREtrd/v21n/ALf913r9Ls5r8H4qx0MRi5zpH6Nl1OUKXvi0UUV86dwUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//9P9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACmTf6un0UAePeLPgz4A8cM1xrOloLl/wDltHlZP++0rzyz/ZL+Ettc/aZLa4uv9iWV3Svp1VUjOMCgKvbmu+hnOLpQ9nCrOx8zieD8sq1fa1cPDnMLQvDejeGrFNP0SzisrVOiQpsFbx5HIqbPeoJiOlcE583vSPooUIxjywifJ/7VHx0uPhD4Yh0/w/sPiDV96W+//liiffmr8VfEOsar4hv59V1u6mvb2Z97zTPvd3r7e/bqe8m+LUEM3+oTTofJ/wC+3318KzJX7Twjk1GGEhV+3M/nDjXiqtLM6uHn8EDm981tMk0L7HT50dPkdK/Wj9ib9o/V/Hby/C/xzdfatUsofOsrh/vzQp99H/vulfk7cp89ey/suXGo2P7QvgttO+/Jd7H/AOuLo++unizKYVcNOcj2eEc1nSrQ5T+iNKy9Z0XS9esJtL1i1ivbSdNrxTJvR61Ep9fhsD96PjPXv2Ef2b9dvJLx/DbWTv8ANttLmaFP++Eeu8+HH7KvwO+Fd8mq+E/C9umop9y7uN9zMn+482/ZX0hScEcV2TzDEShyymclPBUo+9GI1PuU+iiuM6wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA/9T9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKhepqY9AHxX+118FLv4ieGIPE3huDz9a0XeREn3poT99PqvVa/Hu8s5raZ7aZHR0+R0f5HR6/pTYKycc1494w+A/wALPHcj3fiXw/bTzv8AflT5Hf8A4Gu2vt+G+MZ4OHsKkfcPyzi3w5+u4j61h58kz+ea52b6/Sf9h39n/WbHXT8X/F9i1qqQ+VpcMybH+f782z/c+5X2l4X/AGYvgp4Qvk1LSfDFuLpG3I8u+bZ9N5Ne/LCixmNE2VfEPGP1qj7KnA6eGeB54WcateZYSn1HUlfCn6UFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/9X9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiimb6AH0UzfWLrqak2mXsejuiXr2832Z3+4k2z5Hf/gdAG7RXwha+Ev201+Gvw+sLvxXpf/CX2mtPL4luf+WNzpfmtshh/c/f2f7CV9023+pSgCaiivzy/aj8YeLdB/ag/Z28NaHqlzZadruqX6X1vDMyQ3KJDv2Sp/HQB+htFfnT+3L4o8SeHPHP7Ptpomp3GnQar4vSG7S3mdPOTYnyPs++lfotQAUUUUAM30+vzs+KfiPxJp//AAUP+D/hy11G4TSNR8Paq81okz+S7pv+d0+5ur6z+MXxy+GPwE8NSeLPibrUWkWP3Yk+/NcP/chiX53f6UAewUV+T8niH9qT9t1vsPg+1u/gx8Ip3+fUbj5Nb1WH/pin/LFH/wA76/Tfwj4dh8IeFtL8MWt1NewaXbR26TXD+bO6wrt3O+PmagDqaKwtahvbrSru30uf7JeTQzJDLt3iOZl+R9n8Wxq8T/Zz8H/GLwP4Gk0b45eLE8X+IvtlxMt9Cjon2Z/uJ86J9ygD6Joor83P2VfF/ijXP2u/2ldA1jVLm907SNRsEtLaaZnht0/fcRJ/BQB+kG/59lPr86/CviPxDc/8FI/G3hd9TnfSLbwlYTLZu7+QkhdPnRPub6/RSgAoorw34x6X8YNSuPCL/CjVLfTktNZtpdZS5/5edK/5bInyP83/AHzQB7lRXgvgHRvjPY/Fnx3qXjnV7a98F6g9t/wj1pD/AK61RE/feb8ifef/AGnrxr/goZ4i1jwt+yf4x1zQL6bTr2FrNVuLdzHIm+5RG+ZaAPt+iuG+HEr3HgHw7cyvvefTrR3dvvP+5TmvO/j/AOEvit42+G974e+C3iVPCHiR5kaO+dN6bEb50+X7u+gD32vkj4ifEz9pzTvH17pXwy+G+na34X0uCF5bzUNRezmvHmTe6WmxHT5P9uvpPw5Bqem6Fp1jrl19u1GC3hS5uNmzzpkT53/4E1fDf/BR3XdX0H4KeG5tDvptPkuvF+iW7vbuyO8LyvvT5P4aAPrT4V+K/HXi/wALprHxC8KHwdqkkzp9h+0pd/Iv3H3p8nzV6pVay/49If8AcSrNABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf//W/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK5Gfxl4YtPFNr4LvNXt4devonuLeyaRPtM0Mf33RP7tddX5oeOX+1f8FQPh7C//AC6+Db90/wCBu9AH6X0VzHii71Ww0PUL7QrIajqcFvM9tbs+zzpkT5E3/wAG6vz1tf8Ago54c8Cav/wi/wC0r4G1n4bap/BK8X2uzm/3HSgD6B/a4+Pt98Afhp/avhuy/tPxX4ivIdJ0O0b/AJbX9ydqb/8AYWvlnTf2FvjZ4201PF/xU+OniSDxzcp53/Eum8mws3f/AJYon8aJXzB+1P8AtneBPjd8R/hZr3wP0jVPGun/AAy1N9f1ZIrN0RIU2J/H/GtfqH4H/bT/AGbvHng278b6T42sbWy0yLzr6K7fybmzD/8APWF/n+/8vy0AeQfsc/Gb4r3fj7xz+zP8dbldS8X/AA98iWHU0+X7fYT/AHHcf3/uf9910f7Y3xs+Ivg3UfAfwX+Czw2njj4mXj2ltfXCb0sLaFN802z+8qV+fXwi/bR+DSftu/EX49+O76Xw34U17SIdL0a7mtptl4ls6Jv+RH/uVq/tLftm/s86x+0l8D/jT4I8Vxa9p/g25vLfVokhmR4ba8TZ5yb0Tds30Ae5eLf2QP2tvA2iXXxB+H/7QWua94vsUe7exvk/0O7dPneFE3uib6+xv2Q/j437RvwU0jx/d2qWWro8tlqdun3Iby2fZNs/2H++teYj/gpZ+xfMnPxAT/gVnc//ABqvF/8AglXf2mp+Avihqujv52kXvjK/ms3X5E8mREf5EoA+kf2dvjv4y+Knxi+M/gPxFHbpp3w/1aGxsXiTY7o+/wC//e+5XlX7W8P/ABld+zFN/wBRbUk/8lq+bfg3+0v8Fv2dP2rf2jNP+LfiH+xf7b1+F7R/JmmR9iPv+4jf367a6+Luhfti/tg/Cu6+DcdxqnhH4ZNeajqOstE8Vs80ybEhTeKAPTf2/wBsfEj9mzf/ANDqn/oCV+l9fmX/AMFAY3f4hfs3P/c8bJ/7JX6Yu+xN9AHh3xx/aA+G37PXhpPE/wASNRe1hupfJtLe3Tzbq5m/uQxfxV5z8Gf2tdB+NXiT/hGNP8FeKvDz/Z3uEuNZ0p7a2dE/uS/3q+Iv24fjj8HfCX7UPwY8ReJNdtNQTwJqMy6zpab5prX7Sn7m42bSnyff/v19s+GP24f2UvFut6f4e8NfEKwvdU1SZLe3t0SZHeZ/kRPnSgDxf4wfJ/wUg+Bz/wB/w9rH/tWu1/a9/ZW8XftA+IvAXjLwN4ittB1zwPcPc2/261+12zu5R13x/dbaUryX9r/xTbfBj9rD4JftA+LbWX/hCtLtNS0m+u4Ueb7HNco+x3RP4Pnr6Dh/b+/Y9mRHPxQ0tN/97zv/AI1QB4Ff+BP+CnnhNPt+hfEDwx4vEP8Ay6XFglnv/wBjKJXoX7OH7Xnizx78QdQ+Anx18KN4H+JmmW/2lLZD5ltfW4+88Lf/AGdei/8ADe37Hu3f/wALT0n/AMjf/EV8Ya18Z/hP8cv+CivwV1n4Q63b6/Hpmjaql9c2yOP4JdiPvRKAPsX9oT4G/Gv4163ZaR4f+JVx4G8FRxH7Xb6ZDsv7mb/rtv8AuV8k/EX9nL45/sj+D9Q+M3wN+KGs+JY/DyfbNT0PXH+0w3lsn+t2f3H2V9xeNv2xP2afhx4jvfCHjnx5Y6PrGnNsuLeXzd8b/wC1sSvkL9o//goN8EfE3w28Q/DT4J3Vx4/8XeJ7ObTrS306zmdENymze7umPk30AfoP8GPiTpfxe+GHhn4m6ONlp4isYbtE/uF1+dP+ANla+E/2Qk2ftnftTP8A9ROw/wDa1cV+y7+1x8B/2cPgf4e+CXxp1u48J+M/CEL22oWV5ZzF/O3u/wC6dEZHT5vkruf2CINV8c/E744ftDjTrjTPD3j/AFeH+yftKPC81tbb/wB9sf8Av76AOg8DQo//AAUx+I039zwbpv8A6Glfou77K/PTwemz/gpN8Q5v7/g3Sv8A0Ov0Bvj/AKLM6/wI9AGHo/ibQ/EqXTaBqlvqKWsr28z28yTeVMn30fZ910r8xf8AhJ/jr+2v8UPGWg/DbxxcfDn4X+Cb59La+05P9P1K8T7/AM/8CJXdf8E0/wB98GfF+pTfPPdeMNbeZ/7/AM6V4H+z58aNB/Yf8bfEL4LftCQ3Og6XqmuXOraNrP2Z5rO5huf77pv+egDe+IVt+0D+wtrfhTxnF8SdR+I3w/1vU7bS9Usdc+e5tnuX2JNDNXv3/BTWbf8AsV+Mpv772H/pSlfD37cX7Yngb49+G/CPgf4R2N9q+ip4n01r7WXtnhtElE3yQxb/AL7tX39/wUD8HeIfHP7HfjLQvDNm17qCW9ncCFPvultMjvt/4DQB9J+D9as/D/wa0XxDqj+TaaXokN3cN/chhtt7/wDjtfmj8N/AHxx/bt066+MvjP4jat4G8D6jcTJoOjaM/kv9mhfZ50z/AN967nQP29f2QPFXwNh8A+KvGv8AYNze6D/Zd3b3Ftc+dC7232d/uI/3a8V/YU/bp+BHwv8Ag+nwi+KXiy302fwjeXFpY3nkzPDf2bPvhmTam5Pv/wAdAHpGj3/xc/Yo+O/gf4deM/Gt948+GfxJmexsZdT+e802/TZsTf8A3H316n/wU1/5Ih4R/wCx10H/ANDevlz9sj9o/wCCn7RXi/4FeGPg74otvEOo2XjK2mmSFJkeGH5Pn+dEr6j/AOCmMLv8CvCOz+DxloP/AKG9AH6KWv8Ax7Q/7iVZqtZtvtIT/sJVmgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/X/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK/L39tXw/43+FPxl+Hn7YPgXSLjXbXwok2ma/aWib5v7Nm/jRP9mv1CqtNAjxujpvR/4KAPjDw5/wAFBf2RPEGix6w3xFsdPd13PbXqSw3MLf3XTZXyV8U/ihZ/t5fEXwd8I/g1oMuqeA/D2s22ra94mu7Z0ttlm+/7NbO6fPv/APH6918R+Lf2ZLmH4p+MNT+DyXt78L7tLe736VD51+838dt8nz19s/D59CvfCWl6j4e0saJp19bRXEVp5KWzwpMm8I6J91koAveH/A/g3wvbvF4d0Gx0wT/K4trZId/+9sWucl+C/wAJJpL6WTwbpO/VE2Xf+hw/vk+/8/yfP81eqfcooA4O5+Gnw+utNt9IvPDenT2Vkm2GF7SJ40/3E2VhzfAv4LT/AOt8B6G//bhb/wDxFesUUAeTp8CPgpF9zwHoaf8AcNtv/iK5Hxj8V/2dP2bbSPTfE2r6R4HjuEkuorRES2ebH33SFF+avoavNPGfwk+GPxC1Cy1Txx4X07XrzTvlt5by2SZ4f4vk30Afnx+wv4T8N/F/WvjJ8cPEPh6G90Txx4lebSf7QtUk320KbPOTzU+49fprovhzQPDlt9j0DTrbToP7ltEkKf8AjmKtafp1lpVrHY6bAlrbQLsSGNQiIn+yi1p0AYeqaDoesy2s+sadDevYv51u8qI5hfH303/dNblFFAHlutfBf4ReI9Tm1vxF4L0nVNRuvmluLmwhmmk/3ndM1WsPgZ8F9Ju4dS0rwPo1pdWrh4ZYrC3SRHX+JW2cV63RQBj6rouka1Yvpus2UV9azpteGZFdH/4C9eb/APDP3wN/6EDQP/Bbbf8AxFewUUAeRf8ACgfgb/0IGgf+C22/+IrX8P8Awo+GHhPU01rwv4U0zSNRRHRLi0s4YZgj/eXeiivRqKAPMNd+DXwk8U6jNrHiXwbpOqX0/wAz3FzZwzO/+87oa1vDnw0+H/hBvM8KeG9O0h/71paxQn/xxa7migDjdX+H3gTxBdf2l4g8PadqN0P+W1xaxTP/AN9OldNa21rZQpbWkSwwp8qoibFFXKKAMhdK0uPUX1iO1iS+mQI9xsTzXRf4d9aMyecmz+B6mooA/H74T+P4f2EPir4y+D/xtgl0/wCHvijU5tZ0DxEkLvZo9z/rre4dPuPX3Nqn7Qn7JviTS0vNb8ceGNRsk+dftFzbP/44/wDhXvXiHw14f8VWEmkeI9Ot9Us5vvQ3KLNH/wB8vXzy/wCxT+yq+of2k/wy0bz92/8A49lx/wB80AfAXxR8W+GP2yfjZ8Ofg58BLL7b4G8Fasmua5q1vbeTYb7b7kKPsTe//wAXX7PIi+VsdK5zw34N8L+D9NTR/C2lW2kWUf3YbaJIU/8AHK6b7lAHml78GvhHfXMl5feCtGnmk+Z3ewhd2/8AHKrP8Cvgs/3/AAHof/gttv8A4ivV6KAPM9N+D3wl0W/g1TSPBuk2V7bNvimhsYY3RvVXRARXa6ro+ka3AkGr2UV9BG6yqkyK6B0+62GrXooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA/9D9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoqOvk7XP23P2YfDOt6h4b8Q+O7Sy1TS7h7e5heKb5Jk+Vk+5VwhKXwgfWtFeEfD79pL4G/Fa9Om+APGunate/wDPvHNsm/74fY9S/Hr45eH/ANn7wBJ8QPElld6hZR3ENv5Vkm+bfN0+9R7OXwge5UVzfhbXYPFGgad4htkaODVLeG5RH++iTJv2tXQ70qAH0V4V+0B8ePDH7O3w+k+I/i60u77TkuIbbyrFEebfN9z77p/Ourh+JvhOHwFp/wARdevYtC0e+tobsy3zpD5KTJvRXz/FS9nL4gPQGtofn+Rf3n3/APbq1WTpeqafrenW2r6Zcpd2d4iSwyp8yOj/AHGWtPfTAfRTN9fNnw1/aP0P4m/GDx58H9N0u5tb7wC6Jc3Erpsm3vs+RRShDmA+lqKZ/BXlfgX4x/Dv4l6vr2g+CdaTU77w1N9n1BER0+zTf3PnSmB6vRTN6Ub6AH0Vxj+OfCSeKk8CtrNqPEEkP2lNP85PtPkr/Hs67a7DfQA+imb0rxD9oL43aH+z58M734neIrG41CyspYYmhttnmP5z7F+/Sh73uge5UV8n/Ff9qzw18JvCXgPxZqukXN7B4/uLa3tEidEeFrlEdGff/v1o/FX9p7wn8J/iR4N+Get6ZfXuoeNnRLWW3RXih3vs/e+la+wkB9P0UxHo31mA+iiijnAKKZvSjfQA+iiigAopm9KfQAUUx/uV5lH8W/AM3xBk+FEGro/iuG3+0vZbH3pD/f8AubaAPUKKwvEGvab4a0O98QavMLbT9Oie4uJfvbIY03u1YngPx/4S+Jnhay8ZeCdQTVNF1Df5NwgZEfY+xvvf7VAHcUUzfRvoAfRTN6V886D+0b4N8SfG7W/gLp9rfJ4h0G2+03ErwqLbZ8n3X3/7dXyAfRNFMR6fUAFFFFABRTN6f36N6UAPopm+koAkooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/0f34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAE75r8Uv2NPhv4H+IX7Tn7RH/Cc6Daa8lrqz+Sl3CkyJvu7jfs31+1vfFfjl+xD4l8OeGP2l/2iH8R6vaaWk+rts+13KQ79lzcfc3stdmB/h1eUg7f9rn9iH4aWPw+1n4ufBzTv+EQ8X+FYX1GJ9O/cpKlt87psT+LZ9zbis/XP2wPFum/sD6D8eraysdU8Q/aIdPuEvofOheZHdHfZ/f8Akr039tH9q/4ceFvhNrvgfwhrVt4h8X+KLd9MsbGxdLl0+0/I7vs3/wAFfI/x1+EurfCX/gmNpHg/W4/I1T7dbXdxD/ce5d32f8A3120LzjCNUD72+Nn7VUPwX+EvhHxJDpH9teK/GVvbJpelw/Ij3MyI/wD3wm+vD9e+Mv7ffw08Fap8TvHnhHw3e6Ra2j3D2kNy6XNmn99/7+z+NN9eRftYXR+HWu/sz/GXX4Wn8N6Db2dvdts3ojbEff8A9819K/tYftMfAPVP2b/FlhpXjnS9RvPEWmPFY29vMs00rv8A7CfOn/A6mnQ+Dkhz84HJfGD9q3xnof7C2g/tHw6Lpl1rWry2e+0uYfOs0853R/l3/wCxXnP/AAUB8VfF/WP2WNP1XTNM0v8A4QrV9L0271Sbe6XMNzM6OiW6f3K8o+OXz/8ABJDwZ/vad/6Olr6V/bDtJrz/AIJyxrCm900jRXfZ/c2JV0qcIzh/jCZ0P7HXij9rjVtD8FWPjnwvodl8Pf7Jh8m+t59948Pk/wCjfJv/AI/467nx/wCIP24tU8W6vYfCzw/oGneHrG4dLS71GZ3mvEX+PYm/ZXrf7Ofifw5N+zz8P7mz1C3njTQLBF2TJ87pbJvT/fr86vgnbeOf20PE/jjxZ8QfizqnhTS9B1Oa0tND0m8+x+TCn8b/AOzWDhzTnPlA+uP2bv2kviB4z+I+vfAv44+HofD3jzw/Elz/AKM++2ubZ/40/wC+68c/ZJ2f8Nw/tJf9fkP/AKG9eF/szaV4e8Mf8FGvEOg+EvFd34y06y0B4v7Rvrz7ZM7p5O9PO/j2P8le4/slQ+T+3D+0e7fc+0p/6OetMRQhDn5f5AR+q9fkn/wTuR4fjT+0Xv8A+g/v/wDH5q/Wivye/wCCe7/8Xm/aF/29c/8AZ5q5ML/BrFnL/CL9tH9rn9oC11vQfhd4A0l9Q0i+mhuNWuHeGwhT+BNjvveWvZPgV+1H8a7740a3+zl8dvDtjp/i610977T7i0k/c3OxNy/99f3q82/4JNwqngn4nu38fieb/wBASr/iF/8AjbDoKf3PCr/+iXrrq8nPOlyEHzNeeJ/2sH/byTVU8L6H/wAJ+mhvElj9pf7B9j2J8+/+/X6R+MP2jPGfwK+BE/xI/aD0ixtfFBuHt7fTtLmeaG5d/wDUojv/AOP14VrV5peif8FPNOudVnW1TUfC7pE8z7Ed9ifIm/8A3Kxv+Cpdjdaz8KPCniTRLl2sfDutK99NafO9sjqmx/8AfWnU5Ks6UOQDpJvjl+3Xp/hP/hbmo+ANGTw2kP2t9L85/t6Wf39/+/srA/be+Keg/Gb9gCb4i+Gv+PTV7jTXKP8AfhdJvnR/9x6TwZ+zhrfxF8EweIdH/af8RapomqW+9/8ASU2bHT50f5/k/wBtK83/AGk/hL4Y+Dn/AATz1rwZ4P8AEv8Awlelx63b3CXfyffe5+dP3PyfI9P2dLmh/OBP+2o7p8Cv2Zv+wjo//omGvqr9oz45+IPhr8dfgx8PtJ0uxurXxrc+Tc3FxDvmhRHT/Uv/AAffr5V/bYT/AIsJ+zZMn8Go6P8A+iYa7z9tT/k7j9mf/r/f/wBGpVQp83Jzf3wPZP2hf2pfHXhX4o6X+z58BPD0PiXx/qMX2m4+0PstrOA/xv8A8A+d68L+Kn7VH7Zf7OulaXqPxf8ACHh29tdUu4beG+tJn2I7/fR0+/v2Vh/8Jbo/wO/4KX+JfEPxTmTTNI8ZaR5WnahcfJCm9If4/wCD/U7Kx/8Agpz8Y/hh4z8F+EfBPhHxLaa3rEesw3bxWMyTbYdmz5nT5KnD0LzhHkDnPuH9of8Aagvvhdd+GPAHgHQf+Eo+IXjH/jx07fsRE/57Tf7FeFa/+05+038A77SNb/aV8KaR/wAIbq92ltNfaNM7vYO/3N++vmL9rrQdU0f9tHwJ4k1fxdfeAtE8Q6Pb2Nvrlo+z7M6LsdN//ode3+Of2P7bxV4Mns/iL+0zrOqeGrrZM6ajc2z2z7PuP8701QpQjDmM+c9Y/ab/AGyPFPwW+JfgDwf4I8Lp4ug8a2j3EMMLv9pmd/kiSH+CvKfH/wC0/wDto/BPTLX4p/FzwHo0HgqSVEu7S0m33lsj/wB99/365j49+GIfDH7W/wCyl4etrp72HTovs6Sv/GkKP89fSH/BS/Z/wyB4v2f89bP/ANHJUU4UualDl+M0gd18fv2tfC3wa+Gvh7xlp1k+vap41SH+w9Ph+/cvMiPvb/YTelePaX8Uf+Cg6i28T638NtGudIndHfT4bnZeJC//AAP79fJPxj2eFbz9kL4l+J49/hDS9LsLe5f/AJYwzbIX3v8A8A+f/gFftLL8Q/AMWhp4jm8Q6dHpTpv+0vcxeTsf/b3VhOnGlCHLEs+QPjx+1b4p8K/ETR/gP8E/DyeKPiLq8KXEsMz7Lawhf598z15/ZftNftGfBfx/4b8M/tT+G9Mh0HxZcfZLTVtJf5IZm/glFfJHxX8Lagn/AAUP1uPUviDffDO28XadC+naxaOiLMmxP3O9+Nr7K+kPHf7Fya/Z6WnxR/aI1fV7K1vIbi0TUZoXTzt/ybN7/feun2FKMYcxB+rSOrxb0r8dfGvxU8B/B3/gpDq/i34i6wmi6QdASH7S6O6b3RNifIj1+wFnALOxhtt+/wAlETd/uV+Rmu+D/CXjz/gptqHh7xtpFprWnv4d837PeQpNDvRE2PseuPL+T3+YD2f41/ty/sr+JvhB4y8P+GviFaXmqahpN5b28KQ3O95pIXVV+eGsL9lP4v8Ahj4I/sAaB8R/Fsn+haWl5tRPvzTPdzbIU/23r1L9oj9nL4D6F8CvHeqaD4B0PT7610a8miuIbCFJEdY87lZUr8vvE+g69rf/AAS98AarpqPPa6Frz3d8if8APH7TMn/jj124WnSnR5I/zh9s+5tE+Pn7dHjLw1H8TvC/w30iHwvMguLexuZn+3zWx+benz/3K9k8Hfte6V8R/wBnTxd8XvDmn/Y9b8I2lz9r0y5/5Y3Nsm/Y/wDFsavX/hX8Wvhxr/wg0XxrputWUGiQafC8rvMiJbbE+dH/ALjJX5RfBRJvEnwy/a3+KOlR+T4X8Rfb/sP9x9nnO7p/33XPCHN7soge7/CL9s79pv4/aJpF98KPhTbz2kDIms6pdzeTZ79/zpZq7pv2J/v17f4D+PfiLxD+2R41+CFxpGnW2n6DpP2tLuKH/THf9z8jvv8AufPVv/gnHEifsd/D8bOsNz/6Uy14X8JNh/4Ke/Fbf/BoCf8AtvVVIQlOrCMPgA9H8SfFX9vTRP7Qv/8AhAPCtrpFlvf7RcX+xEhT+N/33yfJUn7Kf7XHjv4xeGfGnj34p6DY6D4V8ML8mo2m/wAm5eHf52ze53BcV498fvHet/tc/Fo/sz/DTV/7M8CaI6P4q1lHREfZ/wAuyP8Ax19D/tB/DfRLP9jfxf8AC/4QJF5OmaTst7e0dHd0hdHf7n8bp9+l7OHJGMogeJ+G/wBqf9rz49/2h4t/Z48AaWngqxuHht7nVptk155P9z56+g/2Yv2rJfjJqWu/Dnx3oJ8KeP8Awp/x/afnKOn3d8Wa5b/gnr488Gax+y94X0jTb23gvdBimtr633ojwzI773dP9qvAvhTqFh8Rf+Ck/jTxz4DdLnw9oOhvaX13F/qZrl9iff8A4/nSidOEueHJ8AD/AIXftr/tQfHtte8P/CL4b6fPqGkahNbTancTNDp8MKfcX53+eavaf2f/ANqX4m618a9T/Zw+P/h200HxlY2n2y0uLF99tcwrz/6C/wAu2vK/+CUkKDwX8VH/AL/i25/9ASm+IU3/APBWfRP9jwq//ol6Kihzzp8gI7S//ac/aP8Ai/478UeFP2ZPCmlzaX4Ou/sl3fatNs3zJ/AiV9X/AAF8VfG/xHpOoQ/HXwvaeHtXsptkL2M3nQ3KbfvpXyL8Sf2OX1LxlrHxd/Zk+Jk3gfxLqMrzXkMM2+wmm3/PvRH+T5/v12P7Cn7QXxE+MMHi/wAGfFJ7e+17wTefZH1C0T9zcoxZf4Pk/grOtThKHNAs/Q6iiiuAAooooAKKKKACiiigAooooAKKKKACiiigAooooA//0v34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACvhbxh/wAE8P2XfG3iXVPFmvaDdvqmr3E13cOmo3Kb5pn3u+xH/v1900VcJyj8IHyr8K/2Mv2cvg5qSa54M8IRJqkf3Lu7d7yZP9x5nfbXqfxa+Dvgf41+DJ/APj+1lutHuZUmdIZnhffD9z50+avV6KTnP+YD5A/aU8U/Db4UfCjT9K+IHg278Y+EZHSxltLe2+2eTCifJM+/+5/fr8k/iF48/ZD1LwZq/gP9lT4U6jdeOPF8P2FLh7ObfbI7pv2PM77P+AV/RHcwxXMTQzoro/8AC9Y+n+GdB0uX7Tp2nW1rJ/eihRG/8crroYnkM+Q+VPCn7LXhLxN+y34T/Z/+LVo99ZadZ2b3EMMzwn7TD8/30+f5Havo28+HPhLUvAZ+G2pael74ee0Wxe2l+cPbImzZXfUVyznKRofDvw8/YE/Z6+GPjGz8beGLXUEvNLl862ilv5nton9k3f8AoVN8cf8ABPv9m/x34rufGF7pF3YXuou8t2tjeS20M7v9/eiV9yUVp9arfzgfMfw3/ZH+BPwo8c/8LF+Hvh3+yNX+x/Yf3Mz+T5Pyf8st2zf8n3q7bwZ8DPh/4E8f+KPiV4ctJoNd8Xuj6jM8zuj7Pu7Ef5E/4BXs1FZzqSAZs+SvEPhp8APht8Jdc8SeIPA1lLZX3iu4+06i7zPL50vzvn587Pv/AMFe5UVAHiXwa+Anw3+BFlq+m/DizlsYdau3vrlHmebfM/yl/nqK4/Z++Gt18aIfj9NZS/8ACYwWn2FLj7Q+zyduzZ5P3K9yoquaQHzJ8dP2TPg5+0S+n3fxC06X+0NLXZb3lpM9tcon9zen8NXfhp+y/wDCP4WeANU+Guh6dLqGha27Pew6jM955zOmw7/Nr6Ooo9pPk5OYD877v/gmd+zVNfPc2kGrafZyNve0ttSmSH/4uvfNR/ZV+C+ofCD/AIUQ+jyweDfNSX7JDczI+9H37vN37/vV9KUU516v8wHz74//AGcvhd8TvDfhjwr4vsZrvTvCE0NxpyJcypse2QIm91+/92r/AI7+APw2+JPjXwp8Q/FtjNc634JfzdMlW4kRIX+986K2x/8Agde50VHPMD84v2wvij+zjoviTTvAH7SfgO+13RJrdbi31aKzeaGGZ3dGi3psdP8AgD1+fHiPR/gr8evE/g74KfseeAbrTtHTV4dR1vWZbZ0/cp/fmm3vsRd/8f36/oN1TSNN1aD7PqtrFdwf3JUWRP8Ax6odJ0PRtFh8nRrG3sk/uRRrH/6BXfQxvso+6PkPP/iZ8GPhx8X/AAofB3xG0SHWtNxlUm++j/30dPnRv92vk3SP+CY/7Lelaumqz6fqeqJC+9LS81KZ7ZP+AV+h9FccK9WPuxmI8Q8R/AP4ZeK/G3hP4ha1prya14HTZpDpM8aQp/uK+1/+B1u/Ff4S+DvjR4Jvfh749tXvtG1BkeaJJnhc+U+9PnT5q9Soo55AePav8Evhx4h+Gtt8Jde0dNR8MWttFaRW1x8+xIU2J8/3t6/3q+VNN/4Jo/sx2Gsf2lNZane2qPvSxm1KZ7ZP+Aff/wDH6/QyiinXnH4ZAfP/AMV/2avg78aNAtfD/wAQNBTUIdOTZaTI7pcwp/sTJ89eD+D/APgnd+zp4V1211+e21PWZrF0lt4r+/mmhhdDuTYibPu197jPelqliKsVyxkBB5KbPK/gSvFIfgB8NYfjHJ8eEsZf+EvmtvsjXH2l9nk7ETZ5W7Z/BXuVFY/D8IHKeLvCmkeOfDGp+ENfjeTTtYt5LS4VH2O8My7H+Za4fwB8E/h18N/hxH8JvDmnb/DCJMn2S7d7nekzl3V/O37vvV7HRTA/PTUf+Caf7Md/qj30VlqdlZzNvfT7bUZks3/4B2/4DX1bH8Fvh1bfDK5+D+m6Wlh4UurR7F7S2/c/uXG1/nX59/8At169RVzr1ZfHIZ5l8Kfhb4S+DXgXS/hx4Filh0TRw6W6SyPM6b3Z2+d/9pjXI6f+zz8N9J+K3iH4y2VrcJ4o8SWZsb2b7S+x4W2fcT7q/cr3uio5piPz2k/4Jm/stO87/wBn6pH9qffNs1W5Te//AH3Xs3wQ/ZH+Dv7Pd/qepfDi0vYJ9XhS3uPtd5NdI6I+/wC7MzV9R0Vc69WUeXnA+EvG/wDwT2/Z28aeIbrxPFY6j4dutRffdppF49nBN/f3wp8vzf7NfQ/wm+Bnw0+CXhseFfhvo66XayHdM+7zJpn/AL8zt87PXs1FE8RVl7spgeH/AAY/Z/8Ah38BNM1fSvhzazWkOtXjX1z50zzF7h1Clvmptx+z/wDDm7+NMPx9mtrj/hL4LL+zkl+0v5P2b7v+p+5XuVFRzTA+EPFv/BPT9n7xRrd1r0cer6RJqMrzXKWOpSwwyvJ9/wCT5/vV9EfB34GfDP4D+HJPDPw10gaXazP5szb3mmmf+87v8zV7PRVOvL4eYAoooqQCiiigAooooAKKKKACiiigAooooAKKKKACiiigD//T/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9T9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/1f34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//W/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9f9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/0P34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//R/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9L9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/0/34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//U/fiiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9X9+KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/1v34ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//Z";
+
+/* ---------------- Design tokens ----------------
+Color:
+  --ink:      #0B1730  (near-black navy, headings)
+  --navy:     #14235A  (primary deep navy)
+  --blue:     #1E5FBF  (primary brand blue)
+  --sky:      #3FA6E8  (secondary blue, from logo)
+  --cyan:     #5FD0E0  (accent cyan, from logo tips)
+  --bg:       #F6F8FC  (page background, cool off white)
+  --paper:    #FFFFFF  (card surface)
+  --line:     #E3E8F2  (hairline borders)
+  --muted:    #5B6B8C  (secondary text)
+Type: "Cairo" for everything (headings heavier weight, body 400/500)
+Layout: RTL, asymmetric hero with node-motif visual, numbered steps only for
+  genuine sequences (service process). Cards use one consistent radius (14px)
+  but restrained — accent is the node-line motif, not shadows/gradients.
+================================================== */
+
+/* ---------------- Data ---------------- */
+
+const PRODUCTS = [
+  {
+    id: "cv-templates",
+    type: "قوالب",
+    name: "قوالب سيرة ذاتية احترافية",
+    price: 39,
+    short: "قوالب سيرة ذاتية مصممة لتقديم خبراتك بطريقة منظمة وعصرية.",
+    long:
+      "مجموعة قوالب سيرة ذاتية جاهزة للتعديل، مبنية بأسس تصميم واضحة تركّز على سهولة القراءة وإبراز نقاط القوة المهنية. مناسبة للطلاب والخريجين الجدد والباحثين عن عمل في مختلف التخصصات، مع تنسيق يراعي أنظمة الفرز الآلي (ATS) المستخدمة في كثير من الشركات.",
+    features: [
+      "تصاميم متعددة تناسب مختلف المجالات",
+      "متوافقة مع أنظمة الفرز الآلي ATS",
+      "قابلة للتعديل الكامل بسهولة",
+      "نسخة عربية ونسخة إنجليزية",
+    ],
+    includes: [
+      "5 قوالب سيرة ذاتية بصيغة قابلة للتحرير",
+      "دليل تعبئة مختصر خطوة بخطوة",
+      "نسخة PDF جاهزة للطباعة",
+    ],
+    howTo:
+      "بعد الشراء، افتح القالب المناسب لمجالك في برنامج التحرير، استبدل البيانات التجريبية ببياناتك، ثم صدّره بصيغة PDF جاهزة للإرسال.",
+    icon: "cv",
+  },
+  {
+    id: "ppt-templates",
+    type: "قوالب",
+    name: "قوالب عروض تقديمية PowerPoint",
+    price: 49,
+    short: "قوالب عروض احترافية للمشاريع الجامعية والاجتماعات وبيئة العمل.",
+    long:
+      "مجموعة شرائح جاهزة بتصميم موحّد ومنظم، مبنية على نظام ألوان وخطوط متناسق يسهّل تخصيصه لأي موضوع. تشمل شرائح للمقدمة والمحتوى والبيانات والخاتمة، مناسبة للعروض الجامعية وعروض المشاريع واجتماعات العمل.",
+    features: [
+      "أكثر من 20 تخطيط شريحة جاهز",
+      "رسوم بيانية وجداول قابلة للتعديل",
+      "نظام ألوان وخطوط متناسق بالكامل",
+      "متوافق مع PowerPoint وGoogle Slides",
+    ],
+    includes: [
+      "ملف PPTX رئيسي بـ 20+ شريحة",
+      "نسخة بديلة بألوان داكنة",
+      "أيقونات مرفقة قابلة لإعادة التلوين",
+    ],
+    howTo:
+      "افتح الملف في PowerPoint، اختر التخطيطات التي تحتاجها من دليل الشرائح في البداية، واستبدل النصوص والبيانات بمحتواك الخاص.",
+    icon: "ppt",
+  },
+  {
+    id: "excel-templates",
+    type: "قوالب",
+    name: "قوالب Excel لإدارة المصروفات والمبيعات",
+    price: 59,
+    short: "قوالب Excel عملية لتنظيم المصروفات ومتابعة المبيعات والتقارير.",
+    long:
+      "ملفات إكسل جاهزة بمعادلات مُعدّة مسبقًا لتسجيل المصروفات اليومية، متابعة المبيعات، وإصدار ملخصات وتقارير تلقائية. مناسبة لأصحاب المشاريع الصغيرة والمستقلين الذين يريدون تنظيم بياناتهم المالية دون الحاجة لأدوات معقدة.",
+    features: [
+      "معادلات وحسابات تلقائية جاهزة",
+      "لوحة ملخص تتحدث تلقائيًا",
+      "تصنيف المصروفات حسب البند",
+      "تقارير شهرية جاهزة للطباعة",
+    ],
+    includes: [
+      "ملف تتبع المصروفات",
+      "ملف متابعة المبيعات",
+      "لوحة ملخص وتقارير مجمّعة",
+    ],
+    howTo:
+      "أدخل بياناتك في الأوراق المخصصة لذلك، وستتحدث لوحة الملخص والتقارير تلقائيًا بالاعتماد على المعادلات المُعدة مسبقًا.",
+    icon: "excel",
+  },
+];
+
+const SERVICES = [
+  {
+    id: "web-design",
+    type: "خدمات",
+    name: "تصميم وإنشاء موقع إلكتروني",
+    price: "ابتداءً من 499 ريال",
+    priceNum: 499,
+    short: "تصميم وتطوير مواقع إلكترونية احترافية ومتجاوبة.",
+    long:
+      "نصمم وننشئ لك موقعًا إلكترونيًا احترافيًا يعكس هوية مشروعك، بتصميم متجاوب يعمل بسلاسة على جميع الأجهزة، وبنية واضحة تسهّل على زوارك الوصول لما يحتاجونه.",
+    features: [
+      "تصميم مخصص يعكس هوية مشروعك",
+      "متجاوب بالكامل مع الجوال والتابلت",
+      "سرعة تحميل عالية وأداء محسّن",
+      "دعم فني بعد التسليم",
+    ],
+    gets: [
+      "موقع إلكتروني كامل جاهز للنشر",
+      "تصميم متجاوب لجميع الأجهزة",
+      "جلسة تسليم وشرح لكيفية التحديث",
+    ],
+    duration: "من 10 إلى 15 يوم عمل",
+    icon: "web",
+  },
+  {
+    id: "store-setup",
+    type: "خدمات",
+    name: "إنشاء متجر إلكتروني",
+    price: "ابتداءً من 799 ريال",
+    priceNum: 799,
+    short: "إنشاء متجر إلكتروني متكامل بتصميم احترافي وتجربة مستخدم سهلة.",
+    long:
+      "نبني لك متجرًا إلكترونيًا متكاملًا بتصميم احترافي وتجربة تسوّق سلسة، يشمل عرض المنتجات وإدارة الطلبات وربط وسائل الدفع، بما يناسب طبيعة منتجاتك وحجم أعمالك.",
+    features: [
+      "تصميم واجهات متجر احترافية",
+      "نظام إدارة منتجات وطلبات",
+      "تجربة شراء سلسة وسهلة",
+      "متوافق مع الجوال بالكامل",
+    ],
+    gets: [
+      "متجر إلكتروني جاهز للاستخدام",
+      "لوحة تحكم لإدارة المنتجات والطلبات",
+      "تدريب على إدارة المتجر",
+    ],
+    duration: "من 15 إلى 25 يوم عمل",
+    icon: "store",
+  },
+  {
+    id: "data-analysis",
+    type: "خدمات",
+    name: "تحليل البيانات وإعداد التقارير",
+    price: "ابتداءً من 299 ريال",
+    priceNum: 299,
+    short: "تحليل بياناتك وتحويلها إلى تقارير واضحة تدعم اتخاذ القرار.",
+    long:
+      "نحلل بياناتك ونستخرج منها المؤشرات الأهم، ونحوّلها إلى تقارير مرئية واضحة تساعدك على فهم أداء عملك واتخاذ قرارات مبنية على أرقام حقيقية بدل التخمين.",
+    features: [
+      "تحليل دقيق للبيانات الخام",
+      "تقارير مرئية وسهلة الفهم",
+      "استخراج المؤشرات الأهم لعملك",
+      "توصيات عملية مبنية على النتائج",
+    ],
+    gets: [
+      "تقرير تحليلي شامل",
+      "لوحة مؤشرات مرئية",
+      "جلسة عرض للنتائج والتوصيات",
+    ],
+    duration: "من 5 إلى 10 أيام عمل",
+    icon: "analytics",
+  },
+  {
+    id: "report-automation",
+    type: "خدمات",
+    name: "أتمتة التقارير",
+    price: "ابتداءً من 399 ريال",
+    priceNum: 399,
+    short: "أتمتة إعداد التقارير لتقليل العمل اليدوي وتوفير الوقت.",
+    long:
+      "نبني لك نظامًا يقوم بإعداد تقاريرك تلقائيًا من بياناتك المُحدّثة، بما يقلل الوقت والجهد المبذول في التجهيز اليدوي، ويضمن حصولك على تقارير دقيقة وجاهزة في وقتها.",
+    features: [
+      "تقارير تتحدث تلقائيًا من مصدر بياناتك",
+      "تقليل زمن التجهيز بشكل كبير",
+      "تنسيق ثابت واحترافي في كل مرة",
+      "قابلة للتخصيص حسب احتياجك",
+    ],
+    gets: [
+      "نظام تقارير آلي جاهز للاستخدام",
+      "دليل استخدام مختصر",
+      "دعم فني بعد التسليم",
+    ],
+    duration: "من 7 إلى 14 يوم عمل",
+    icon: "automation",
+  },
+  {
+    id: "sales-analysis",
+    type: "خدمات",
+    name: "تحليل المبيعات",
+    price: "ابتداءً من 299 ريال",
+    priceNum: 299,
+    short: "تحليل بيانات المبيعات لاكتشاف الأنماط والمنتجات الأكثر مبيعًا.",
+    long:
+      "نحلل بيانات مبيعاتك لفهم سلوك العملاء واكتشاف المنتجات الأكثر أداءً والفترات الأكثر نشاطًا، لمساعدتك على بناء قرارات تسعير وتسويق مبنية على بيانات حقيقية.",
+    features: [
+      "تحديد المنتجات الأكثر مبيعًا",
+      "اكتشاف الأنماط الموسمية",
+      "تحليل سلوك العملاء الشرائي",
+      "تقرير قابل للمشاركة مع فريقك",
+    ],
+    gets: [
+      "تقرير تحليل مبيعات مفصل",
+      "رسوم بيانية توضيحية",
+      "توصيات لتحسين الأداء",
+    ],
+    duration: "من 5 إلى 10 أيام عمل",
+    icon: "sales",
+  },
+];
+
+const EVENTS = [
+  {
+    id: "hackathons",
+    name: "تنظيم الهاكاثونات",
+    short: "تنظيم وإدارة الهاكاثونات التقنية من مرحلة التخطيط وحتى التنفيذ.",
+    icon: "hackathon",
+  },
+  {
+    id: "workshops",
+    name: "تنظيم ورش العمل",
+    short: "تنظيم ورش عمل تقنية وتدريبية تناسب مختلف الفئات والمجالات.",
+    icon: "workshop",
+  },
+  {
+    id: "competitions",
+    name: "تنظيم المسابقات",
+    short: "تصميم وتنظيم مسابقات تقنية وابتكارية تحفّز المشاركين على تقديم حلول مبتكرة.",
+    icon: "competition",
+  },
+  {
+    id: "conferences",
+    name: "تنظيم الملتقيات والمؤتمرات",
+    short: "تنظيم الملتقيات والمؤتمرات والفعاليات التقنية بشكل احترافي.",
+    icon: "conference",
+  },
+];
+
+const ALL_ITEMS = [...PRODUCTS, ...SERVICES];
+
+/* ---------------- Icons (inline SVG, line-style, matches node motif) ---------------- */
+
+function Icon({ name, size = 24, className = "" }) {
+  const s = size;
+  const common = {
+    width: s,
+    height: s,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    className,
+  };
+  switch (name) {
+    case "cv":
+      return (
+        <svg {...common}>
+          <rect x="5" y="3" width="14" height="18" rx="2" />
+          <circle cx="12" cy="9" r="2.2" />
+          <path d="M8 16c.7-1.8 2.2-2.7 4-2.7s3.3.9 4 2.7" />
+        </svg>
+      );
+    case "ppt":
+      return (
+        <svg {...common}>
+          <rect x="3" y="5" width="18" height="12" rx="2" />
+          <path d="M8 21h8M12 17v4" />
+          <path d="M7 13l2.5-3 2 2 3-4" />
+        </svg>
+      );
+    case "excel":
+      return (
+        <svg {...common}>
+          <rect x="4" y="4" width="16" height="16" rx="2" />
+          <path d="M4 9h16M4 14h16M9 4v16M14 4v16" />
+        </svg>
+      );
+    case "web":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3c2.4 2.5 3.6 5.6 3.6 9s-1.2 6.5-3.6 9c-2.4-2.5-3.6-5.6-3.6-9S9.6 5.5 12 3z" />
+        </svg>
+      );
+    case "store":
+      return (
+        <svg {...common}>
+          <path d="M4 9l1-5h14l1 5" />
+          <path d="M4 9a2 2 0 004 0 2 2 0 004 0 2 2 0 004 0 2 2 0 004 0" />
+          <path d="M5 9v10h14V9" />
+          <path d="M9 19v-5h6v5" />
+        </svg>
+      );
+    case "analytics":
+      return (
+        <svg {...common}>
+          <path d="M4 19V5M4 19h16" />
+          <rect x="7" y="12" width="2.6" height="7" />
+          <rect x="12" y="8" width="2.6" height="11" />
+          <rect x="17" y="14" width="2.6" height="5" />
+        </svg>
+      );
+    case "automation":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M12 3v3M12 18v3M21 12h-3M6 12H3M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1M18.4 18.4l-2.1-2.1M7.7 7.7L5.6 5.6" />
+        </svg>
+      );
+    case "sales":
+      return (
+        <svg {...common}>
+          <path d="M4 15l5-5 4 4 7-8" />
+          <path d="M15 6h5v5" />
+        </svg>
+      );
+    case "hackathon":
+      return (
+        <svg {...common}>
+          <path d="M8 3l8 8-3 2 5 5-2 2-5-5-2 3-8-8z" />
+        </svg>
+      );
+    case "workshop":
+      return (
+        <svg {...common}>
+          <circle cx="9" cy="7" r="2.4" />
+          <circle cx="17" cy="7" r="2.4" />
+          <path d="M4 20c.5-3 2.3-5 5-5s4.5 2 5 5M13 20c.4-2.4 1.8-4.1 4-4.5" />
+        </svg>
+      );
+    case "competition":
+      return (
+        <svg {...common}>
+          <path d="M8 4h8v4a4 4 0 01-8 0V4z" />
+          <path d="M8 5H5a3 3 0 003 3M16 5h3a3 3 0 01-3 3" />
+          <path d="M12 12v4M9 20h6M10 16h4v4h-4z" />
+        </svg>
+      );
+    case "conference":
+      return (
+        <svg {...common}>
+          <rect x="3" y="6" width="18" height="12" rx="1.5" />
+          <path d="M3 10h18M8 6v-1a1 1 0 011-1h6a1 1 0 011 1v1" />
+        </svg>
+      );
+    case "innovation":
+      return (
+        <svg {...common}>
+          <path d="M9 18h6M10 21h4" />
+          <path d="M12 3a6 6 0 00-3.5 10.9c.5.4.8 1 .8 1.6h5.4c0-.6.3-1.2.8-1.6A6 6 0 0012 3z" />
+        </svg>
+      );
+    case "expertise":
+      return (
+        <svg {...common}>
+          <path d="M12 3l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9 6.8 19l1-5.8-4.2-4.1 5.8-.8z" />
+        </svg>
+      );
+    case "clarity":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="8" />
+          <path d="M9 12l2 2 4-4" />
+        </svg>
+      );
+    case "focus":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="8" />
+          <circle cx="12" cy="12" r="3.2" />
+          <path d="M12 3v3M12 18v3M3 12h3M18 12h3" />
+        </svg>
+      );
+    case "cart":
+      return (
+        <svg {...common}>
+          <circle cx="9" cy="20" r="1.4" />
+          <circle cx="17" cy="20" r="1.4" />
+          <path d="M3 4h2l2.2 11.4a2 2 0 002 1.6h7.6a2 2 0 002-1.6L20 8H6" />
+        </svg>
+      );
+    case "search":
+      return (
+        <svg {...common}>
+          <circle cx="10.5" cy="10.5" r="6.5" />
+          <path d="M20 20l-4.8-4.8" />
+        </svg>
+      );
+    case "menu":
+      return (
+        <svg {...common}>
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      );
+    case "close":
+      return (
+        <svg {...common}>
+          <path d="M5 5l14 14M19 5L5 19" />
+        </svg>
+      );
+    case "chevron-left":
+      return (
+        <svg {...common}>
+          <path d="M15 6l-6 6 6 6" />
+        </svg>
+      );
+    case "plus":
+      return (
+        <svg {...common}>
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      );
+    case "minus":
+      return (
+        <svg {...common}>
+          <path d="M5 12h14" />
+        </svg>
+      );
+    case "trash":
+      return (
+        <svg {...common}>
+          <path d="M4 7h16M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M6 7l1 13a1 1 0 001 1h8a1 1 0 001-1l1-13" />
+        </svg>
+      );
+    case "check":
+      return (
+        <svg {...common}>
+          <path d="M5 13l4 4 10-10" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
+/* ---------------- Node motif (decorative, echoes logo) ---------------- */
+
+function NodeMotif({ className = "", variant = "hero" }) {
+  if (variant === "hero") {
+    return (
+      <svg
+        viewBox="0 0 320 320"
+        className={className}
+        aria-hidden="true"
+        style={{ overflow: "visible" }}
+      >
+        <defs>
+          <linearGradient id="nodeGradA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#5FD0E0" />
+            <stop offset="55%" stopColor="#3FA6E8" />
+            <stop offset="100%" stopColor="#1E5FBF" />
+          </linearGradient>
+          <linearGradient id="nodeGradB" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stopColor="#14235A" />
+            <stop offset="100%" stopColor="#1E5FBF" />
+          </linearGradient>
+        </defs>
+        <g stroke="url(#nodeGradA)" strokeWidth="2.2" fill="none" opacity="0.9">
+          <path d="M70 190 L110 140 L150 170 L190 100 L230 130" />
+          <path d="M110 140 L120 210 L190 100" />
+          <path d="M150 170 L170 230" />
+        </g>
+        <g>
+          <circle cx="70" cy="190" r="9" fill="url(#nodeGradA)" />
+          <circle cx="110" cy="140" r="13" fill="url(#nodeGradA)" />
+          <circle cx="150" cy="170" r="7" fill="url(#nodeGradB)" />
+          <circle cx="190" cy="100" r="15" fill="url(#nodeGradB)" />
+          <circle cx="230" cy="130" r="8" fill="url(#nodeGradA)" />
+          <circle cx="120" cy="210" r="6" fill="url(#nodeGradA)" />
+          <circle cx="170" cy="230" r="10" fill="url(#nodeGradB)" />
+        </g>
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 120 40" className={className} aria-hidden="true">
+      <g stroke="#3FA6E8" strokeWidth="1.6" fill="none" opacity="0.6">
+        <path d="M8 28 L28 14 L48 24 L68 10 L88 20 L108 12" />
+      </g>
+      <g fill="#3FA6E8">
+        <circle cx="8" cy="28" r="3" />
+        <circle cx="28" cy="14" r="4" />
+        <circle cx="48" cy="24" r="2.6" />
+        <circle cx="68" cy="10" r="4.4" />
+        <circle cx="88" cy="20" r="3" />
+        <circle cx="108" cy="12" r="3.4" />
+      </g>
+    </svg>
+  );
+}
+
+/* ---------------- Product illustration (per-product, not generic) ---------------- */
+
+function ProductArt({ id, className }) {
+  if (id === "cv-templates") {
+    return (
+      <svg viewBox="0 0 200 200" className={className}>
+        <rect x="55" y="30" width="90" height="140" rx="6" fill="#EEF3FC" stroke="#C7D6EF" />
+        <circle cx="100" cy="65" r="14" fill="#3FA6E8" opacity="0.85" />
+        <rect x="72" y="90" width="56" height="6" rx="3" fill="#9FB6DE" />
+        <rect x="72" y="103" width="56" height="6" rx="3" fill="#C7D6EF" />
+        <rect x="72" y="116" width="40" height="6" rx="3" fill="#C7D6EF" />
+        <rect x="72" y="135" width="56" height="4" rx="2" fill="#DCE6F5" />
+        <rect x="72" y="144" width="44" height="4" rx="2" fill="#DCE6F5" />
+        <rect x="72" y="153" width="50" height="4" rx="2" fill="#DCE6F5" />
+      </svg>
+    );
+  }
+  if (id === "ppt-templates") {
+    return (
+      <svg viewBox="0 0 200 200" className={className}>
+        <rect x="30" y="55" width="140" height="90" rx="8" fill="#EEF3FC" stroke="#C7D6EF" />
+        <rect x="46" y="70" width="60" height="34" rx="4" fill="#3FA6E8" opacity="0.85" />
+        <rect x="114" y="70" width="40" height="14" rx="3" fill="#9FB6DE" />
+        <rect x="114" y="90" width="40" height="14" rx="3" fill="#C7D6EF" />
+        <rect x="46" y="114" width="108" height="6" rx="3" fill="#DCE6F5" />
+        <rect x="46" y="126" width="80" height="6" rx="3" fill="#DCE6F5" />
+        <path d="M85 155 L100 168 L115 155" stroke="#9FB6DE" fill="none" strokeWidth="3" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 200 200" className={className}>
+      <rect x="35" y="35" width="130" height="130" rx="8" fill="#EEF3FC" stroke="#C7D6EF" />
+      <path d="M35 75h130M35 115h130M75 35v130M120 35v130" stroke="#C7D6EF" />
+      <rect x="120" y="75" width="45" height="40" fill="#3FA6E8" opacity="0.35" />
+      <rect x="75" y="115" width="45" height="50" fill="#3FA6E8" opacity="0.2" />
+      <path d="M40 105 L60 90 L80 100 L100 70 L120 80" stroke="#1E5FBF" strokeWidth="2.5" fill="none" />
+    </svg>
+  );
+}
+
+/* ---------------- Toast system ---------------- */
+
+function useToasts() {
+  const [toasts, setToasts] = useState([]);
+  const push = useCallback((message, kind = "success") => {
+    const id = Math.random().toString(36).slice(2);
+    setToasts((t) => [...t, { id, message, kind }]);
+    setTimeout(() => {
+      setToasts((t) => t.filter((x) => x.id !== id));
+    }, 3200);
+  }, []);
+  return { toasts, push };
+}
+
+function ToastStack({ toasts }) {
+  return (
+    <div className="toast-stack" aria-live="polite">
+      {toasts.map((t) => (
+        <div key={t.id} className={`toast toast-${t.kind}`}>
+          <span className="toast-icon">
+            <Icon name="check" size={16} />
+          </span>
+          {t.message}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ---------------- App shell / routing (simple internal router) ---------------- */
+
+function App() {
+  const [route, setRoute] = useState({ name: "home" });
+  const [cart, setCart] = useState([]); // {id, qty}
+  const [cartOpen, setCartOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { toasts, push } = useToasts();
+  const scrollRef = useRef(null);
+
+  const navigate = useCallback((r) => {
+    setRoute(r);
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+  }, []);
+
+  const addToCart = useCallback(
+    (id) => {
+      setCart((prev) => {
+        const existing = prev.find((c) => c.id === id);
+        if (existing) {
+          return prev.map((c) => (c.id === id ? { ...c, qty: c.qty + 1 } : c));
+        }
+        return [...prev, { id, qty: 1 }];
+      });
+      const item = ALL_ITEMS.find((p) => p.id === id);
+      push(`تمت إضافة «${item?.name}» إلى السلة`, "success");
+    },
+    [push]
+  );
+
+  const updateQty = useCallback((id, delta) => {
+    setCart((prev) =>
+      prev
+        .map((c) => (c.id === id ? { ...c, qty: Math.max(0, c.qty + delta) } : c))
+        .filter((c) => c.qty > 0)
+    );
+  }, []);
+
+  const removeFromCart = useCallback((id) => {
+    setCart((prev) => prev.filter((c) => c.id !== id));
+  }, []);
+
+  const cartCount = cart.reduce((sum, c) => sum + c.qty, 0);
+  const cartItems = cart
+    .map((c) => {
+      const item = ALL_ITEMS.find((p) => p.id === c.id);
+      const price = item ? (item.priceNum ?? item.price) : 0;
+      return item ? { ...item, qty: c.qty, unitPrice: price } : null;
+    })
+    .filter(Boolean);
+  const cartTotal = cartItems.reduce((sum, c) => sum + c.unitPrice * c.qty, 0);
+
+  return (
+    <div className="app" dir="rtl">
+      <GlobalStyles />
+      <SkipLink />
+      <Header
+        route={route}
+        navigate={navigate}
+        cartCount={cartCount}
+        onOpenCart={() => setCartOpen(true)}
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
+      />
+      <main id="main-content">
+        {route.name === "home" && <HomePage navigate={navigate} addToCart={addToCart} />}
+        {route.name === "products" && (
+          <ProductsPage navigate={navigate} addToCart={addToCart} initialQuery={route.query} />
+        )}
+        {route.name === "product" && (
+          <ProductDetailPage
+            id={route.id}
+            navigate={navigate}
+            addToCart={addToCart}
+            openCart={() => setCartOpen(true)}
+          />
+        )}
+        {route.name === "services" && <ServicesPage navigate={navigate} />}
+        {route.name === "service" && (
+          <ServiceDetailPage id={route.id} navigate={navigate} push={push} />
+        )}
+        {route.name === "events" && <EventsPage navigate={navigate} />}
+        {route.name === "event" && <EventDetailPage id={route.id} navigate={navigate} />}
+        {route.name === "about" && <AboutPage />}
+        {route.name === "contact" && <ContactPage push={push} />}
+        {route.name === "checkout" && (
+          <CheckoutPage
+            cartItems={cartItems}
+            cartTotal={cartTotal}
+            navigate={navigate}
+            push={push}
+            clearCart={() => setCart([])}
+          />
+        )}
+      </main>
+      <Footer navigate={navigate} />
+      <CartDrawer
+        open={cartOpen}
+        onClose={() => setCartOpen(false)}
+        items={cartItems}
+        total={cartTotal}
+        updateQty={updateQty}
+        removeFromCart={removeFromCart}
+        navigate={navigate}
+      />
+      <ToastStack toasts={toasts} />
+    </div>
+  );
+}
+
+function SkipLink() {
+  return (
+    <a href="#main-content" className="skip-link">
+      تخطي إلى المحتوى الرئيسي
+    </a>
+  );
+}
+
+/* ---------------- Header ---------------- */
+
+const NAV_LINKS = [
+  { label: "الرئيسية", route: { name: "home" } },
+  { label: "المنتجات الرقمية", route: { name: "products" } },
+  { label: "الخدمات التقنية", route: { name: "services" } },
+  { label: "الفعاليات", route: { name: "events" } },
+  { label: "من نحن", route: { name: "about" } },
+  { label: "تواصل معنا", route: { name: "contact" } },
+];
+
+function isActive(route, target) {
+  if (target.name === "home") return route.name === "home";
+  if (target.name === "products") return route.name === "products" || route.name === "product";
+  if (target.name === "services") return route.name === "services" || route.name === "service";
+  if (target.name === "events") return route.name === "events" || route.name === "event";
+  return route.name === target.name;
+}
+
+function Header({ route, navigate, cartCount, onOpenCart, mobileMenuOpen, setMobileMenuOpen }) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
+      <div className="header-inner">
+        <button
+          className="brand-link"
+          onClick={() => navigate({ name: "home" })}
+          aria-label="آفاق للحلول الرقمية — الرئيسية"
+        >
+          <img src={LOGO_SRC} alt="آفاق للحلول الرقمية" className="brand-logo" />
+        </button>
+
+        <nav className="main-nav" aria-label="التنقل الرئيسي">
+          {NAV_LINKS.map((l) => (
+            <button
+              key={l.label}
+              className={`nav-link ${isActive(route, l.route) ? "is-active" : ""}`}
+              onClick={() => navigate(l.route)}
+            >
+              {l.label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="header-actions">
+          <button className="icon-btn cart-btn" onClick={onOpenCart} aria-label="فتح السلة">
+            <Icon name="cart" size={22} />
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </button>
+          <button
+            className="icon-btn mobile-menu-btn"
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            aria-label={mobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
+            aria-expanded={mobileMenuOpen}
+          >
+            <Icon name={mobileMenuOpen ? "close" : "menu"} size={22} />
+          </button>
+        </div>
+      </div>
+
+      {mobileMenuOpen && (
+        <div className="mobile-menu">
+          {NAV_LINKS.map((l) => (
+            <button
+              key={l.label}
+              className={`mobile-nav-link ${isActive(route, l.route) ? "is-active" : ""}`}
+              onClick={() => navigate(l.route)}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </header>
+  );
+}
+
+/* ---------------- Breadcrumbs ---------------- */
+
+function Breadcrumbs({ items }) {
+  return (
+    <nav className="breadcrumbs" aria-label="مسار التصفح">
+      {items.map((it, i) => (
+        <span key={i} className="crumb-wrap">
+          {i > 0 && <Icon name="chevron-left" size={14} className="crumb-sep" />}
+          {it.onClick ? (
+            <button className="crumb-link" onClick={it.onClick}>
+              {it.label}
+            </button>
+          ) : (
+            <span className="crumb-current">{it.label}</span>
+          )}
+        </span>
+      ))}
+    </nav>
+  );
+}
+
+/* ---------------- Home page ---------------- */
+
+function HomePage({ navigate, addToCart }) {
+  return (
+    <>
+      <Hero navigate={navigate} />
+      <ProductsSection navigate={navigate} addToCart={addToCart} />
+      <ServicesSection navigate={navigate} />
+      <EventsSection navigate={navigate} />
+      <AboutSection compact />
+      <WhySection />
+      <ContactSection compact navigate={navigate} />
+    </>
+  );
+}
+
+function Hero({ navigate }) {
+  return (
+    <section className="hero">
+      <div className="hero-inner">
+        <div className="hero-text">
+          <h1 className="hero-title">نحو آفاق رقمية أكثر ابتكارًا</h1>
+          <p className="hero-sub">
+            حلول رقمية وتقنية تساعدك على تطوير أعمالك والاستفادة من التقنية بطرق أكثر ذكاءً وفاعلية.
+          </p>
+          <div className="hero-actions">
+            <button className="btn btn-primary" onClick={() => navigate({ name: "products" })}>
+              استكشف حلولنا
+            </button>
+            <button className="btn btn-outline" onClick={() => navigate({ name: "contact" })}>
+              تواصل معنا
+            </button>
+          </div>
+        </div>
+        <div className="hero-visual">
+          <NodeMotif variant="hero" className="hero-motif" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProductsSection({ navigate, addToCart }) {
+  return (
+    <section className="section" id="products-section">
+      <div className="section-inner">
+        <div className="section-head">
+          <h2 className="section-title">منتجات آفاق الرقمية</h2>
+          <button className="section-link" onClick={() => navigate({ name: "products" })}>
+            عرض جميع المنتجات
+          </button>
+        </div>
+        <div className="card-grid">
+          {PRODUCTS.map((p) => (
+            <ProductCard key={p.id} product={p} navigate={navigate} addToCart={addToCart} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProductCard({ product, navigate, addToCart }) {
+  return (
+    <article className="card product-card">
+      <button
+        className="card-media"
+        onClick={() => navigate({ name: "product", id: product.id })}
+        aria-label={`عرض ${product.name}`}
+      >
+        <ProductArt id={product.id} className="product-art" />
+      </button>
+      <div className="card-body">
+        <button
+          className="card-title-link"
+          onClick={() => navigate({ name: "product", id: product.id })}
+        >
+          {product.name}
+        </button>
+        <p className="card-desc">{product.short}</p>
+        <div className="card-foot">
+          <span className="price">{product.price} ريال</span>
+          <button
+            className="btn btn-small btn-primary"
+            onClick={() => navigate({ name: "product", id: product.id })}
+          >
+            عرض المنتج
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function ServicesSection({ navigate }) {
+  return (
+    <section className="section section-alt">
+      <div className="section-inner">
+        <div className="section-head">
+          <h2 className="section-title">خدمات آفاق التقنية</h2>
+          <button className="section-link" onClick={() => navigate({ name: "services" })}>
+            عرض جميع الخدمات
+          </button>
+        </div>
+        <div className="card-grid card-grid-5">
+          {SERVICES.map((s) => (
+            <ServiceCard key={s.id} service={s} navigate={navigate} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ServiceCard({ service, navigate }) {
+  return (
+    <article className="card service-card">
+      <div className="service-icon-wrap">
+        <Icon name={service.icon} size={26} className="service-icon" />
+      </div>
+      <h3 className="card-title-static">{service.name}</h3>
+      <p className="card-desc">{service.short}</p>
+      <div className="card-foot card-foot-col">
+        <span className="price">{service.price}</span>
+        <button
+          className="btn btn-small btn-outline btn-full"
+          onClick={() => navigate({ name: "service", id: service.id })}
+        >
+          طلب الخدمة
+        </button>
+      </div>
+    </article>
+  );
+}
+
+function EventsSection({ navigate }) {
+  return (
+    <section className="section">
+      <div className="section-inner">
+        <div className="section-head">
+          <h2 className="section-title">فعاليات آفاق التقنية</h2>
+        </div>
+        <div className="card-grid card-grid-4">
+          {EVENTS.map((e) => (
+            <article className="card event-card" key={e.id}>
+              <div className="service-icon-wrap event-icon-wrap">
+                <Icon name={e.icon} size={26} className="service-icon" />
+              </div>
+              <h3 className="card-title-static">{e.name}</h3>
+              <p className="card-desc">{e.short}</p>
+              <button
+                className="btn btn-small btn-ghost btn-full"
+                onClick={() => navigate({ name: "event", id: e.id })}
+              >
+                اعرف المزيد
+              </button>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AboutSection({ compact }) {
+  return (
+    <section className="section section-alt" id="about-section">
+      <div className="section-inner">
+        <div className="about-layout">
+          <div className="about-text">
+            <h2 className="section-title">من نحن</h2>
+            <p className="about-p">
+              في آفاق للحلول الرقمية نعمل على تقديم منتجات وحلول تقنية مبتكرة تساعد الأفراد
+              والمنشآت على الاستفادة من التقنية وتطوير أعمالهم في بيئة رقمية متسارعة.
+            </p>
+            <p className="about-p">
+              نقدم مجموعة متكاملة من المنتجات الرقمية والخدمات التقنية التي تشمل تصميم وتطوير
+              المواقع والمتاجر الإلكترونية وتحليل البيانات وأتمتة التقارير وتحليل المبيعات، إلى
+              جانب تنظيم الفعاليات التقنية والهاكاثونات وورش العمل والمسابقات والملتقيات
+              والمؤتمرات.
+            </p>
+            <p className="about-p">
+              نسعى في آفاق إلى تقديم حلول عملية وموثوقة تجمع بين الابتكار وسهولة الاستخدام، وتساهم
+              في تمكين عملائنا ومواكبة التحول الرقمي.
+            </p>
+          </div>
+          <div className="about-stats">
+            <div className="stat-card">
+              <span className="stat-num">3</span>
+              <span className="stat-label">منتجات رقمية</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-num">5</span>
+              <span className="stat-label">خدمات تقنية</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-num">4</span>
+              <span className="stat-label">أنواع فعاليات</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhySection() {
+  const items = [
+    { icon: "innovation", title: "حلول رقمية مبتكرة", text: "نقدم حلولًا تقنية عملية تواكب احتياجات السوق الرقمي المتغيرة." },
+    { icon: "expertise", title: "خبرة تقنية", text: "فريق متمرس في التصميم والتطوير وتحليل البيانات وتنظيم الفعاليات." },
+    { icon: "clarity", title: "سهولة ووضوح", text: "تجربة واضحة من أول تواصل وحتى تسليم المشروع دون تعقيد." },
+    { icon: "focus", title: "تركيز على احتياجات العميل", text: "كل حل نقدمه مبني على فهم دقيق لهدف العميل ومتطلباته." },
+  ];
+  return (
+    <section className="section">
+      <div className="section-inner">
+        <h2 className="section-title section-title-center">لماذا آفاق؟</h2>
+        <div className="why-grid">
+          {items.map((it) => (
+            <div className="why-item" key={it.title}>
+              <div className="why-icon-wrap">
+                <Icon name={it.icon} size={24} />
+              </div>
+              <h3 className="why-title">{it.title}</h3>
+              <p className="why-text">{it.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ContactSection({ compact, navigate }) {
+  return (
+    <section className="section section-alt" id="contact-section">
+      <div className="section-inner">
+        <ContactForm />
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Products listing page (search + filter) ---------------- */
+
+function ProductsPage({ navigate, addToCart, initialQuery }) {
+  const [query, setQuery] = useState(initialQuery || "");
+  const [filter, setFilter] = useState("الكل");
+
+  const results = useMemo(() => {
+    let list = ALL_ITEMS;
+    if (filter !== "الكل") {
+      list = list.filter((i) => i.type === filter);
+    }
+    if (query.trim()) {
+      const q = query.trim().toLowerCase();
+      list = list.filter(
+        (i) => i.name.toLowerCase().includes(q) || i.short.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [query, filter]);
+
+  return (
+    <section className="section page-section">
+      <div className="section-inner">
+        <Breadcrumbs
+          items={[
+            { label: "الرئيسية", onClick: () => navigate({ name: "home" }) },
+            { label: "المنتجات الرقمية" },
+          ]}
+        />
+        <h1 className="page-title">المنتجات الرقمية</h1>
+        <p className="page-sub">تصفح جميع منتجات وخدمات آفاق للحلول الرقمية في مكان واحد.</p>
+
+        <div className="filter-bar">
+          <div className="search-box">
+            <Icon name="search" size={18} className="search-icon" />
+            <input
+              type="text"
+              className="search-input"
+              placeholder="ابحث عن منتج أو خدمة..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label="بحث"
+            />
+          </div>
+          <div className="filter-chips">
+            {["الكل", "قوالب", "خدمات"].map((f) => (
+              <button
+                key={f}
+                className={`filter-chip ${filter === f ? "is-active" : ""}`}
+                onClick={() => setFilter(f)}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {results.length === 0 ? (
+          <EmptyState
+            title="لا توجد نتائج مطابقة"
+            text="جرّب كلمة بحث مختلفة أو غيّر التصفية للعثور على ما تبحث عنه."
+          />
+        ) : (
+          <div className="card-grid">
+            {results.map((item) =>
+              item.type === "قوالب" ? (
+                <ProductCard key={item.id} product={item} navigate={navigate} addToCart={addToCart} />
+              ) : (
+                <ServiceCard key={item.id} service={item} navigate={navigate} />
+              )
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function EmptyState({ title, text }) {
+  return (
+    <div className="empty-state">
+      <div className="empty-icon">
+        <Icon name="search" size={32} />
+      </div>
+      <h3 className="empty-title">{title}</h3>
+      <p className="empty-text">{text}</p>
+    </div>
+  );
+}
+
+/* ---------------- Product detail page ---------------- */
+
+function ProductDetailPage({ id, navigate, addToCart, openCart }) {
+  const product = PRODUCTS.find((p) => p.id === id);
+  const [added, setAdded] = useState(false);
+
+  useEffect(() => {
+    setAdded(false);
+  }, [id]);
+
+  if (!product) {
+    return (
+      <section className="section page-section">
+        <div className="section-inner">
+          <EmptyState title="المنتج غير موجود" text="لم نتمكن من العثور على هذا المنتج." />
+        </div>
+      </section>
+    );
+  }
+
+  const related = PRODUCTS.filter((p) => p.id !== product.id);
+
+  return (
+    <section className="section page-section">
+      <div className="section-inner">
+        <Breadcrumbs
+          items={[
+            { label: "الرئيسية", onClick: () => navigate({ name: "home" }) },
+            { label: "المنتجات الرقمية", onClick: () => navigate({ name: "products" }) },
+            { label: product.name },
+          ]}
+        />
+
+        <div className="detail-layout">
+          <div className="detail-media">
+            <ProductArt id={product.id} className="product-art-large" />
+          </div>
+          <div className="detail-info">
+            <h1 className="detail-title">{product.name}</h1>
+            <div className="detail-price">{product.price} ريال</div>
+            <p className="detail-short">{product.short}</p>
+
+            <div className="detail-actions">
+              <button
+                className="btn btn-outline btn-large"
+                onClick={() => {
+                  addToCart(product.id);
+                  setAdded(true);
+                }}
+              >
+                إضافة إلى السلة
+              </button>
+              <button
+                className="btn btn-primary btn-large"
+                onClick={() => {
+                  addToCart(product.id);
+                  navigate({ name: "checkout" });
+                }}
+              >
+                شراء الآن
+              </button>
+            </div>
+            {added && (
+              <button className="view-cart-link" onClick={openCart}>
+                عرض السلة
+              </button>
+            )}
+
+            <div className="detail-block">
+              <h2 className="detail-block-title">الوصف التفصيلي</h2>
+              <p className="detail-block-text">{product.long}</p>
+            </div>
+
+            <div className="detail-block">
+              <h2 className="detail-block-title">المميزات</h2>
+              <ul className="feature-list">
+                {product.features.map((f, i) => (
+                  <li key={i} className="feature-item">
+                    <Icon name="check" size={16} className="feature-check" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="detail-block">
+              <h2 className="detail-block-title">ماذا يتضمن المنتج</h2>
+              <ul className="feature-list">
+                {product.includes.map((f, i) => (
+                  <li key={i} className="feature-item">
+                    <Icon name="check" size={16} className="feature-check" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="detail-block">
+              <h2 className="detail-block-title">طريقة الاستفادة من المنتج</h2>
+              <p className="detail-block-text">{product.howTo}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="related-section">
+          <h2 className="section-title">منتجات قد تعجبك</h2>
+          <div className="card-grid">
+            {related.map((p) => (
+              <ProductCard key={p.id} product={p} navigate={navigate} addToCart={addToCart} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Services listing page ---------------- */
+
+function ServicesPage({ navigate }) {
+  return (
+    <section className="section page-section">
+      <div className="section-inner">
+        <Breadcrumbs
+          items={[
+            { label: "الرئيسية", onClick: () => navigate({ name: "home" }) },
+            { label: "الخدمات التقنية" },
+          ]}
+        />
+        <h1 className="page-title">خدمات آفاق التقنية</h1>
+        <p className="page-sub">خدمات تقنية متكاملة تدعم مشروعك من الفكرة حتى التنفيذ.</p>
+        <div className="card-grid card-grid-5">
+          {SERVICES.map((s) => (
+            <ServiceCard key={s.id} service={s} navigate={navigate} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Service detail page ---------------- */
+
+function ServiceDetailPage({ id, navigate, push }) {
+  const service = SERVICES.find((s) => s.id === id);
+  const [formOpen, setFormOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", phone: "", details: "" });
+
+  useEffect(() => {
+    setFormOpen(false);
+    setSubmitted(false);
+    setForm({ name: "", email: "", phone: "", details: "" });
+  }, [id]);
+
+  if (!service) {
+    return (
+      <section className="section page-section">
+        <div className="section-inner">
+          <EmptyState title="الخدمة غير موجودة" text="لم نتمكن من العثور على هذه الخدمة." />
+        </div>
+      </section>
+    );
+  }
+
+  const steps = [
+    { n: 1, title: "إرسال الطلب", text: "تعبئة نموذج الطلب ببيانات التواصل وتفاصيل احتياجك." },
+    { n: 2, title: "دراسة المتطلبات", text: "مراجعة طلبك وتحديد الخطوات والمتطلبات اللازمة للتنفيذ." },
+    { n: 3, title: "تنفيذ الخدمة", text: "البدء بالتنفيذ الفعلي وفق ما تم الاتفاق عليه." },
+    { n: 4, title: "تسليم المشروع", text: "تسليم العمل النهائي مع شرح مختصر لكل ما تم تنفيذه." },
+  ];
+
+  const submitRequest = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    push("تم إرسال طلبك بنجاح، سنتواصل معك قريبًا", "success");
+  };
+
+  return (
+    <section className="section page-section">
+      <div className="section-inner">
+        <Breadcrumbs
+          items={[
+            { label: "الرئيسية", onClick: () => navigate({ name: "home" }) },
+            { label: "الخدمات التقنية", onClick: () => navigate({ name: "services" }) },
+            { label: service.name },
+          ]}
+        />
+
+        <div className="detail-layout">
+          <div className="detail-media">
+            <div className="service-icon-wrap service-icon-wrap-large">
+              <Icon name={service.icon} size={48} />
+            </div>
+          </div>
+          <div className="detail-info">
+            <h1 className="detail-title">{service.name}</h1>
+            <div className="detail-price">{service.price}</div>
+            <p className="detail-short">{service.long}</p>
+
+            <button className="btn btn-primary btn-large" onClick={() => setFormOpen(true)}>
+              اطلب الخدمة
+            </button>
+
+            <div className="detail-block">
+              <h2 className="detail-block-title">مميزات الخدمة</h2>
+              <ul className="feature-list">
+                {service.features.map((f, i) => (
+                  <li key={i} className="feature-item">
+                    <Icon name="check" size={16} className="feature-check" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="detail-block">
+              <h2 className="detail-block-title">ما الذي يحصل عليه العميل؟</h2>
+              <ul className="feature-list">
+                {service.gets.map((f, i) => (
+                  <li key={i} className="feature-item">
+                    <Icon name="check" size={16} className="feature-check" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="detail-block">
+              <h2 className="detail-block-title">آلية العمل</h2>
+              <ol className="steps-list">
+                {steps.map((s) => (
+                  <li key={s.n} className="step-item">
+                    <span className="step-num">{s.n}</span>
+                    <div>
+                      <div className="step-title">{s.title}</div>
+                      <div className="step-text">{s.text}</div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="detail-block duration-block">
+              <h2 className="detail-block-title">مدة التنفيذ التجريبية</h2>
+              <p className="detail-block-text">{service.duration}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {formOpen && (
+        <Modal onClose={() => setFormOpen(false)} title={`طلب خدمة: ${service.name}`}>
+          {submitted ? (
+            <div className="success-panel">
+              <div className="success-icon">
+                <Icon name="check" size={28} />
+              </div>
+              <h3>تم إرسال طلبك بنجاح</h3>
+              <p>هذا نموذج تجريبي — سيتم التواصل معك من قِبل فريق آفاق قريبًا.</p>
+              <button className="btn btn-primary" onClick={() => setFormOpen(false)}>
+                إغلاق
+              </button>
+            </div>
+          ) : (
+            <form className="request-form" onSubmit={submitRequest}>
+              <label className="form-field">
+                <span>الاسم</span>
+                <input
+                  required
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="اسمك الكامل"
+                />
+              </label>
+              <label className="form-field">
+                <span>البريد الإلكتروني</span>
+                <input
+                  required
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  placeholder="example@email.com"
+                />
+              </label>
+              <label className="form-field">
+                <span>رقم الجوال</span>
+                <input
+                  required
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  placeholder="05xxxxxxxx"
+                />
+              </label>
+              <label className="form-field">
+                <span>تفاصيل الطلب</span>
+                <textarea
+                  required
+                  rows={4}
+                  value={form.details}
+                  onChange={(e) => setForm({ ...form, details: e.target.value })}
+                  placeholder="أخبرنا بتفاصيل ما تحتاجه..."
+                />
+              </label>
+              <button type="submit" className="btn btn-primary btn-full">
+                إرسال الطلب
+              </button>
+            </form>
+          )}
+        </Modal>
+      )}
+    </section>
+  );
+}
+
+/* ---------------- Events pages ---------------- */
+
+function EventsPage({ navigate }) {
+  return (
+    <section className="section page-section">
+      <div className="section-inner">
+        <Breadcrumbs
+          items={[
+            { label: "الرئيسية", onClick: () => navigate({ name: "home" }) },
+            { label: "الفعاليات" },
+          ]}
+        />
+        <h1 className="page-title">فعاليات آفاق التقنية</h1>
+        <p className="page-sub">ننظّم فعاليات تقنية احترافية من التخطيط وحتى التنفيذ الكامل.</p>
+        <div className="card-grid card-grid-4">
+          {EVENTS.map((e) => (
+            <article className="card event-card" key={e.id}>
+              <div className="service-icon-wrap event-icon-wrap">
+                <Icon name={e.icon} size={26} />
+              </div>
+              <h3 className="card-title-static">{e.name}</h3>
+              <p className="card-desc">{e.short}</p>
+              <button
+                className="btn btn-small btn-ghost btn-full"
+                onClick={() => navigate({ name: "event", id: e.id })}
+              >
+                اعرف المزيد
+              </button>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const EVENT_DETAILS = {
+  hackathons: {
+    long:
+      "ننظّم هاكاثونات تقنية متكاملة تبدأ من تحديد الفكرة والفئة المستهدفة، مرورًا بإعداد التحديات والجدول الزمني، وصولًا إلى يوم التنفيذ والتحكيم وإعلان الفائزين. نهتم بتفاصيل التجربة الكاملة للمشاركين والرعاة والمنظّمين.",
+    points: ["تحديد فكرة الهاكاثون والفئة المستهدفة", "إعداد التحديات ومعايير التحكيم", "إدارة يوم التنفيذ من البداية للنهاية", "تنسيق مع الرعاة والمتحدثين"],
+  },
+  workshops: {
+    long:
+      "نصمم وننظّم ورش عمل تقنية وتدريبية تناسب مختلف المستويات، من الورش التعريفية للمبتدئين إلى الورش المتقدمة للمحترفين، مع محتوى تدريبي واضح وتجربة تفاعلية للمشاركين.",
+    points: ["تصميم محتوى الورشة حسب الفئة المستهدفة", "اختيار المدربين المناسبين", "تجهيز المواد والأدوات التدريبية", "متابعة تفاعل المشاركين خلال الورشة"],
+  },
+  competitions: {
+    long:
+      "نصمم وننظّم مسابقات تقنية وابتكارية تحفّز المشاركين على تقديم أفكار وحلول جديدة، مع بناء آلية تقييم عادلة وشفافة ومراحل واضحة من التسجيل حتى إعلان النتائج.",
+    points: ["بناء فكرة المسابقة ومراحلها", "إعداد معايير تقييم واضحة", "إدارة عملية التسجيل والفرز", "تنظيم مرحلة العرض النهائي والتحكيم"],
+  },
+  conferences: {
+    long:
+      "ننظّم الملتقيات والمؤتمرات التقنية بشكل احترافي، بدءًا من التخطيط للمحاور والمتحدثين، مرورًا بالتنسيق اللوجستي، وصولًا إلى إدارة الفعالية في يومها بسلاسة تامة.",
+    points: ["تخطيط محاور المؤتمر والمتحدثين", "التنسيق اللوجستي والمكاني", "إدارة التسجيل والحضور", "إدارة الفعالية يوم التنفيذ"],
+  },
+};
+
+function EventDetailPage({ id, navigate }) {
+  const event = EVENTS.find((e) => e.id === id);
+  const detail = EVENT_DETAILS[id];
+
+  if (!event) {
+    return (
+      <section className="section page-section">
+        <div className="section-inner">
+          <EmptyState title="الفعالية غير موجودة" text="لم نتمكن من العثور على هذه الفعالية." />
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="section page-section">
+      <div className="section-inner">
+        <Breadcrumbs
+          items={[
+            { label: "الرئيسية", onClick: () => navigate({ name: "home" }) },
+            { label: "الفعاليات", onClick: () => navigate({ name: "events" }) },
+            { label: event.name },
+          ]}
+        />
+        <div className="detail-layout">
+          <div className="detail-media">
+            <div className="service-icon-wrap service-icon-wrap-large">
+              <Icon name={event.icon} size={48} />
+            </div>
+          </div>
+          <div className="detail-info">
+            <h1 className="detail-title">{event.name}</h1>
+            <p className="detail-short">{detail.long}</p>
+            <div className="detail-block">
+              <h2 className="detail-block-title">ماذا نقدّم في هذه الفعالية</h2>
+              <ul className="feature-list">
+                {detail.points.map((p, i) => (
+                  <li key={i} className="feature-item">
+                    <Icon name="check" size={16} className="feature-check" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <button className="btn btn-primary btn-large" onClick={() => navigate({ name: "contact" })}>
+              تواصل معنا لتنظيم هذه الفعالية
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- About / Contact standalone pages ---------------- */
+
+function AboutPage() {
+  return (
+    <section className="section page-section">
+      <div className="section-inner">
+        <AboutSection />
+        <WhySection />
+      </div>
+    </section>
+  );
+}
+
+function ContactPage({ push }) {
+  return (
+    <section className="section page-section">
+      <div className="section-inner">
+        <h1 className="page-title">تواصل معنا</h1>
+        <p className="page-sub">يسعدنا تواصلك معنا لأي استفسار أو طلب.</p>
+        <ContactForm push={push} />
+      </div>
+    </section>
+  );
+}
+
+function ContactForm({ push }) {
+  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+
+  const submit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    if (push) push("تم إرسال رسالتك بنجاح", "success");
+    setForm({ name: "", email: "", subject: "", message: "" });
+  };
+
+  return (
+    <div className="contact-panel">
+      <div className="contact-panel-head">
+        <h2 className="section-title">تواصل معنا</h2>
+        <p className="section-sub-text">يسعدنا استقبال استفساراتك ومقترحاتك.</p>
+      </div>
+      {submitted ? (
+        <div className="success-panel">
+          <div className="success-icon">
+            <Icon name="check" size={28} />
+          </div>
+          <h3>تم إرسال رسالتك بنجاح</h3>
+          <p>هذه رسالة تجريبية — سنعاود التواصل معك قريبًا.</p>
+          <button className="btn btn-outline" onClick={() => setSubmitted(false)}>
+            إرسال رسالة أخرى
+          </button>
+        </div>
+      ) : (
+        <form className="request-form contact-form" onSubmit={submit}>
+          <div className="form-row">
+            <label className="form-field">
+              <span>الاسم</span>
+              <input
+                required
+                type="text"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="اسمك الكامل"
+              />
+            </label>
+            <label className="form-field">
+              <span>البريد الإلكتروني</span>
+              <input
+                required
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="example@email.com"
+              />
+            </label>
+          </div>
+          <label className="form-field">
+            <span>الموضوع</span>
+            <input
+              required
+              type="text"
+              value={form.subject}
+              onChange={(e) => setForm({ ...form, subject: e.target.value })}
+              placeholder="موضوع الرسالة"
+            />
+          </label>
+          <label className="form-field">
+            <span>الرسالة</span>
+            <textarea
+              required
+              rows={5}
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
+              placeholder="اكتب رسالتك هنا..."
+            />
+          </label>
+          <button type="submit" className="btn btn-primary btn-full">
+            إرسال
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+/* ---------------- Cart drawer ---------------- */
+
+function CartDrawer({ open, onClose, items, total, updateQty, removeFromCart, navigate }) {
+  return (
+    <>
+      <div className={`drawer-overlay ${open ? "is-open" : ""}`} onClick={onClose} />
+      <aside className={`cart-drawer ${open ? "is-open" : ""}`} aria-hidden={!open}>
+        <div className="drawer-head">
+          <h2>سلة المشتريات</h2>
+          <button className="icon-btn" onClick={onClose} aria-label="إغلاق السلة">
+            <Icon name="close" size={20} />
+          </button>
+        </div>
+
+        {items.length === 0 ? (
+          <div className="cart-empty">
+            <Icon name="cart" size={36} />
+            <p>السلة فارغة حاليًا</p>
+            <button
+              className="btn btn-outline"
+              onClick={() => {
+                onClose();
+                navigate({ name: "products" });
+              }}
+            >
+              تصفح المنتجات
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="cart-items">
+              {items.map((it) => (
+                <div className="cart-item" key={it.id}>
+                  <div className="cart-item-icon">
+                    {it.type === "قوالب" ? (
+                      <ProductArt id={it.id} className="cart-item-art" />
+                    ) : (
+                      <Icon name={it.icon} size={22} />
+                    )}
+                  </div>
+                  <div className="cart-item-info">
+                    <span className="cart-item-name">{it.name}</span>
+                    <span className="cart-item-price">{it.unitPrice} ريال</span>
+                    <div className="qty-control">
+                      <button
+                        className="qty-btn"
+                        onClick={() => updateQty(it.id, -1)}
+                        aria-label="تقليل الكمية"
+                      >
+                        <Icon name="minus" size={14} />
+                      </button>
+                      <span className="qty-value">{it.qty}</span>
+                      <button
+                        className="qty-btn"
+                        onClick={() => updateQty(it.id, 1)}
+                        aria-label="زيادة الكمية"
+                      >
+                        <Icon name="plus" size={14} />
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    className="cart-item-remove"
+                    onClick={() => removeFromCart(it.id)}
+                    aria-label="حذف من السلة"
+                  >
+                    <Icon name="trash" size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="cart-foot">
+              <div className="cart-total-row">
+                <span>المجموع</span>
+                <span className="cart-total-value">{total} ريال</span>
+              </div>
+              <button
+                className="btn btn-primary btn-full btn-large"
+                onClick={() => {
+                  onClose();
+                  navigate({ name: "checkout" });
+                }}
+              >
+                إتمام الشراء
+              </button>
+            </div>
+          </>
+        )}
+      </aside>
+    </>
+  );
+}
+
+/* ---------------- Checkout page ---------------- */
+
+function CheckoutPage({ cartItems, cartTotal, navigate, push, clearCart }) {
+  const [step, setStep] = useState("form"); // form | success
+  const [form, setForm] = useState({ name: "", email: "", phone: "" });
+
+  const submit = (e) => {
+    e.preventDefault();
+    setStep("success");
+    push("تم إتمام الطلب التجريبي بنجاح", "success");
+    clearCart();
+  };
+
+  if (cartItems.length === 0 && step === "form") {
+    return (
+      <section className="section page-section">
+        <div className="section-inner">
+          <EmptyState title="السلة فارغة" text="أضف منتجات إلى السلة قبل إتمام عملية الشراء." />
+          <div className="empty-actions">
+            <button className="btn btn-primary" onClick={() => navigate({ name: "products" })}>
+              تصفح المنتجات
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="section page-section">
+      <div className="section-inner">
+        <Breadcrumbs
+          items={[
+            { label: "الرئيسية", onClick: () => navigate({ name: "home" }) },
+            { label: "إتمام الشراء" },
+          ]}
+        />
+        <h1 className="page-title">إتمام الشراء</h1>
+        <div className="checkout-banner">
+          هذه عملية شراء تجريبية لغرض العرض فقط، ولن يتم أي خصم فعلي.
+        </div>
+
+        {step === "success" ? (
+          <div className="success-panel checkout-success">
+            <div className="success-icon">
+              <Icon name="check" size={32} />
+            </div>
+            <h3>تم استلام طلبك بنجاح</h3>
+            <p>هذا تنفيذ تجريبي لعملية الدفع — لم يتم خصم أي مبلغ فعلي.</p>
+            <button className="btn btn-primary" onClick={() => navigate({ name: "home" })}>
+              العودة إلى الرئيسية
+            </button>
+          </div>
+        ) : (
+          <div className="checkout-layout">
+            <form className="request-form checkout-form" onSubmit={submit}>
+              <h2 className="detail-block-title">بيانات التواصل</h2>
+              <label className="form-field">
+                <span>الاسم</span>
+                <input
+                  required
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="اسمك الكامل"
+                />
+              </label>
+              <label className="form-field">
+                <span>البريد الإلكتروني</span>
+                <input
+                  required
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  placeholder="example@email.com"
+                />
+              </label>
+              <label className="form-field">
+                <span>رقم الجوال</span>
+                <input
+                  required
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  placeholder="05xxxxxxxx"
+                />
+              </label>
+              <button type="submit" className="btn btn-primary btn-full btn-large">
+                تأكيد الطلب التجريبي
+              </button>
+            </form>
+
+            <div className="order-summary">
+              <h2 className="detail-block-title">ملخص الطلب</h2>
+              {cartItems.map((it) => (
+                <div className="summary-row" key={it.id}>
+                  <span>
+                    {it.name} × {it.qty}
+                  </span>
+                  <span>{it.unitPrice * it.qty} ريال</span>
+                </div>
+              ))}
+              <div className="summary-row summary-total">
+                <span>المجموع</span>
+                <span>{cartTotal} ريال</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Modal ---------------- */
+
+function Modal({ children, onClose, title }) {
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className="modal-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modal-head">
+          <h2>{title}</h2>
+          <button className="icon-btn" onClick={onClose} aria-label="إغلاق">
+            <Icon name="close" size={20} />
+          </button>
+        </div>
+        <div className="modal-body">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Footer ---------------- */
+
+function Footer({ navigate }) {
+  return (
+    <footer className="site-footer">
+      <div className="footer-inner">
+        <div className="footer-brand">
+          <img src={LOGO_SRC} alt="آفاق للحلول الرقمية" className="footer-logo" />
+          <p className="footer-blurb">
+            منصة تقنية تقدم منتجات رقمية وخدمات تقنية وحلولًا رقمية، وتنظّم الفعاليات التقنية.
+          </p>
+        </div>
+        <nav className="footer-nav" aria-label="روابط الفوتر">
+          {NAV_LINKS.map((l) => (
+            <button key={l.label} className="footer-link" onClick={() => navigate(l.route)}>
+              {l.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+      <div className="footer-bottom">
+        <span>© 2026 آفاق للحلول الرقمية</span>
+        <span>جميع الحقوق محفوظة</span>
+      </div>
+    </footer>
+  );
+}
+
+/* ---------------- Global styles ---------------- */
+
+function GlobalStyles() {
+  return (
+    <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+
+      :root {
+        --ink: #0B1730;
+        --navy: #14235A;
+        --blue: #1E5FBF;
+        --sky: #3FA6E8;
+        --cyan: #5FD0E0;
+        --bg: #F6F8FC;
+        --paper: #FFFFFF;
+        --line: #E3E8F2;
+        --muted: #5B6B8C;
+        --radius: 14px;
+        --radius-sm: 10px;
+        --shadow-sm: 0 1px 2px rgba(15, 27, 61, 0.06);
+        --shadow-md: 0 8px 24px rgba(15, 27, 61, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body, .app {
+        font-family: 'Cairo', system-ui, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      .app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      main { flex: 1; }
+
+      h1, h2, h3 { margin: 0; font-weight: 800; }
+      p { margin: 0; }
+
+      button {
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: inherit;
+      }
+      input, textarea {
+        font-family: inherit;
+      }
+
+      .skip-link {
+        position: absolute;
+        right: -9999px;
+        top: 0;
+        background: var(--navy);
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 0 0 0 8px;
+        z-index: 200;
+      }
+      .skip-link:focus {
+        right: 0;
+      }
+
+      button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+      }
+
+      /* ---------- Header ---------- */
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(246, 248, 252, 0.9);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s ease, background 0.2s ease;
+      }
+      .site-header.is-scrolled {
+        border-bottom-color: var(--line);
+        background: rgba(255, 255, 255, 0.92);
+      }
+      .header-inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .brand-link {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+      }
+      .brand-logo {
+        height: 42px;
+        width: auto;
+        display: block;
+      }
+      .main-nav {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+        justify-content: center;
+      }
+      .nav-link {
+        padding: 9px 14px;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--muted);
+        transition: color 0.15s ease, background 0.15s ease;
+        white-space: nowrap;
+      }
+      .nav-link:hover { color: var(--navy); background: rgba(30, 95, 191, 0.06); }
+      .nav-link.is-active { color: var(--blue); background: rgba(30, 95, 191, 0.1); }
+
+      .header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        color: var(--navy);
+        transition: background 0.15s ease;
+        position: relative;
+      }
+      .icon-btn:hover { background: rgba(30, 95, 191, 0.08); }
+      .cart-badge {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        background: var(--blue);
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 700;
+        min-width: 17px;
+        height: 17px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 3px;
+      }
+      .mobile-menu-btn { display: none; }
+
+      .mobile-menu {
+        display: none;
+      }
+
+      @media (max-width: 900px) {
+        .main-nav { display: none; }
+        .mobile-menu-btn { display: flex; }
+        .mobile-menu {
+          display: flex;
+          flex-direction: column;
+          padding: 8px 16px 16px;
+          border-top: 1px solid var(--line);
+          gap: 2px;
+        }
+        .mobile-nav-link {
+          text-align: right;
+          padding: 12px 10px;
+          border-radius: 10px;
+          font-weight: 600;
+          color: var(--navy);
+          font-size: 1rem;
+        }
+        .mobile-nav-link.is-active { color: var(--blue); background: rgba(30, 95, 191, 0.08); }
+      }
+
+      /* ---------- Buttons ---------- */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 22px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        white-space: nowrap;
+      }
+      .btn-primary {
+        background: var(--navy);
+        color: #fff;
+      }
+      .btn-primary:hover { background: var(--blue); box-shadow: 0 6px 16px rgba(30, 95, 191, 0.25); }
+      .btn-outline {
+        background: transparent;
+        color: var(--navy);
+        border: 1.5px solid var(--line);
+      }
+      .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+      .btn-ghost {
+        background: rgba(30, 95, 191, 0.06);
+        color: var(--navy);
+      }
+      .btn-ghost:hover { background: rgba(30, 95, 191, 0.12); }
+      .btn-small { padding: 9px 16px; font-size: 0.85rem; }
+      .btn-large { padding: 14px 26px; font-size: 1rem; }
+      .btn-full { width: 100%; }
+
+      /* ---------- Sections ---------- */
+      .section { padding: 72px 0; }
+      .section-alt { background: var(--paper); }
+      .section-inner { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+      .page-section { padding-top: 40px; }
+
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .section-title {
+        font-size: 1.75rem;
+        letter-spacing: -0.01em;
+      }
+      .section-title-center { text-align: center; margin-bottom: 40px; }
+      .section-sub-text { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
+      .section-link {
+        font-weight: 700;
+        color: var(--blue);
+        font-size: 0.92rem;
+        flex-shrink: 0;
+        border-bottom: 1.5px solid transparent;
+        transition: border-color 0.15s ease;
+      }
+      .section-link:hover { border-color: var(--blue); }
+
+      .page-title { font-size: 2.1rem; margin-bottom: 8px; }
+      .page-sub { color: var(--muted); font-size: 1.02rem; margin-bottom: 28px; }
+
+      /* ---------- Hero ---------- */
+      .hero { padding: 56px 0 40px; overflow: hidden; }
+      .hero-inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        align-items: center;
+        gap: 40px;
+      }
+      .hero-title {
+        font-size: 3rem;
+        line-height: 1.2;
+        color: var(--navy);
+        margin-bottom: 20px;
+        letter-spacing: -0.01em;
+      }
+      .hero-sub {
+        font-size: 1.15rem;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 46ch;
+        margin-bottom: 32px;
+      }
+      .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+      .hero-visual {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hero-motif {
+        width: 100%;
+        max-width: 380px;
+        animation: floatIn 1.1s ease-out;
+      }
+      @keyframes floatIn {
+        from { opacity: 0; transform: translateY(14px) scale(0.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      @media (max-width: 900px) {
+        .hero-inner { grid-template-columns: 1fr; text-align: center; }
+        .hero-sub { margin-inline: auto; }
+        .hero-actions { justify-content: center; }
+        .hero-title { font-size: 2.2rem; }
+        .hero-visual { order: -1; }
+        .hero-motif { max-width: 260px; }
+      }
+
+      /* ---------- Cards / grid ---------- */
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+      }
+      .card-grid-5 { grid-template-columns: repeat(5, 1fr); }
+      .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+      @media (max-width: 1080px) {
+        .card-grid-5 { grid-template-columns: repeat(3, 1fr); }
+      }
+      @media (max-width: 720px) {
+        .card-grid, .card-grid-5, .card-grid-4 { grid-template-columns: 1fr; }
+      }
+      @media (min-width: 721px) and (max-width: 1080px) {
+        .card-grid, .card-grid-4 { grid-template-columns: repeat(2, 1fr); }
+      }
+
+      .card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      }
+      .card:hover {
+        border-color: rgba(30, 95, 191, 0.35);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+      }
+
+      .product-card .card-media {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 11;
+        background: linear-gradient(160deg, #F0F5FC 0%, #E7EFFA 100%);
+        padding: 0;
+      }
+      .product-art { width: 100%; height: 100%; }
+      .card-body { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+      .card-title-link {
+        text-align: right;
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: var(--navy);
+        line-height: 1.4;
+      }
+      .card-title-link:hover { color: var(--blue); }
+      .card-title-static {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--navy);
+        line-height: 1.4;
+        margin-bottom: 4px;
+      }
+      .card-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.6; flex: 1; }
+      .card-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 6px;
+      }
+      .card-foot-col { flex-direction: column; align-items: stretch; gap: 12px; }
+      .price { font-weight: 800; color: var(--navy); font-size: 1.02rem; }
+
+      .service-card, .event-card { padding: 24px 20px; }
+      .service-icon-wrap, .event-icon-wrap {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(63, 166, 232, 0.14), rgba(30, 95, 191, 0.1));
+        color: var(--blue);
+        margin-bottom: 16px;
+      }
+      .service-icon-wrap-large {
+        width: 96px;
+        height: 96px;
+        border-radius: 20px;
+        color: var(--blue);
+      }
+      .event-card { display: flex; flex-direction: column; }
+      .event-card .card-desc { margin-bottom: 16px; }
+
+      /* ---------- Breadcrumbs ---------- */
+      .breadcrumbs {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 20px;
+        font-size: 0.88rem;
+      }
+      .crumb-wrap { display: inline-flex; align-items: center; gap: 4px; }
+      .crumb-sep { color: var(--muted); opacity: 0.6; transform: scaleX(-1); }
+      .crumb-link { color: var(--muted); font-weight: 600; }
+      .crumb-link:hover { color: var(--blue); }
+      .crumb-current { color: var(--navy); font-weight: 700; }
+
+      /* ---------- Filter bar ---------- */
+      .filter-bar {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+        padding: 16px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+      }
+      .search-box {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+      }
+      .search-icon { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); color: var(--muted); }
+      .search-input {
+        width: 100%;
+        padding: 11px 42px 11px 14px;
+        border-radius: var(--radius-sm);
+        border: 1.5px solid var(--line);
+        background: var(--bg);
+        font-size: 0.95rem;
+        color: var(--ink);
+      }
+      .search-input:focus { outline: none; border-color: var(--blue); background: #fff; }
+      .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+      .filter-chip {
+        padding: 9px 18px;
+        border-radius: 999px;
+        border: 1.5px solid var(--line);
+        font-weight: 600;
+        font-size: 0.88rem;
+        color: var(--muted);
+        transition: all 0.15s ease;
+      }
+      .filter-chip:hover { border-color: var(--blue); color: var(--blue); }
+      .filter-chip.is-active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+      /* ---------- Empty state ---------- */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+      .empty-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(30, 95, 191, 0.08);
+        color: var(--blue);
+      }
+      .empty-title { color: var(--navy); font-size: 1.2rem; margin-bottom: 6px; }
+      .empty-text { max-width: 40ch; margin: 0 auto; }
+      .empty-actions { display: flex; justify-content: center; margin-top: 20px; }
+
+      /* ---------- Detail layout ---------- */
+      .detail-layout {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 48px;
+        align-items: start;
+        margin-bottom: 64px;
+      }
+      @media (max-width: 900px) {
+        .detail-layout { grid-template-columns: 1fr; gap: 28px; }
+      }
+      .detail-media {
+        position: sticky;
+        top: 96px;
+        background: linear-gradient(160deg, #F0F5FC 0%, #E7EFFA 100%);
+        border-radius: var(--radius);
+        border: 1px solid var(--line);
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      @media (max-width: 900px) { .detail-media { position: static; } }
+      .product-art-large { width: 100%; height: 100%; }
+      .detail-title { font-size: 1.9rem; margin-bottom: 12px; line-height: 1.3; }
+      .detail-price { font-size: 1.6rem; font-weight: 800; color: var(--blue); margin-bottom: 14px; }
+      .detail-short { color: var(--muted); font-size: 1.02rem; line-height: 1.7; margin-bottom: 24px; }
+      .detail-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+      .view-cart-link { color: var(--blue); font-weight: 700; font-size: 0.9rem; margin-bottom: 20px; display: inline-block; border-bottom: 1.5px solid var(--blue); }
+
+      .detail-block { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--line); }
+      .detail-block-title { font-size: 1.15rem; margin-bottom: 14px; color: var(--navy); }
+      .detail-block-text { color: var(--muted); line-height: 1.8; font-size: 0.98rem; }
+      .duration-block .detail-block-text { color: var(--navy); font-weight: 700; }
+
+      .feature-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+      .feature-item { display: flex; align-items: flex-start; gap: 10px; color: var(--ink); font-size: 0.96rem; line-height: 1.6; }
+      .feature-check { color: var(--blue); flex-shrink: 0; margin-top: 2px; }
+
+      .steps-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+      .step-item { display: flex; gap: 16px; align-items: flex-start; }
+      .step-num {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--navy);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        flex-shrink: 0;
+        font-size: 0.95rem;
+      }
+      .step-title { font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+      .step-text { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+
+      .related-section { margin-top: 48px; }
+
+      /* ---------- About ---------- */
+      .about-layout {
+        display: grid;
+        grid-template-columns: 1.4fr 0.8fr;
+        gap: 48px;
+        align-items: start;
+      }
+      @media (max-width: 900px) { .about-layout { grid-template-columns: 1fr; } }
+      .about-text { display: flex; flex-direction: column; gap: 18px; }
+      .about-p { color: var(--muted); line-height: 1.85; font-size: 1.02rem; max-width: 62ch; }
+      .about-p:first-of-type { color: var(--ink); font-weight: 500; }
+      .about-stats { display: flex; flex-direction: column; gap: 16px; }
+      .stat-card {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 24px;
+        text-align: center;
+      }
+      .stat-num { display: block; font-size: 2.4rem; font-weight: 900; color: var(--blue); line-height: 1; margin-bottom: 8px; }
+      .stat-label { color: var(--muted); font-weight: 600; font-size: 0.92rem; }
+
+      /* ---------- Why section ---------- */
+      .why-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+      @media (max-width: 900px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 560px) { .why-grid { grid-template-columns: 1fr; } }
+      .why-item { text-align: center; padding: 8px; }
+      .why-icon-wrap {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        margin: 0 auto 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(63, 166, 232, 0.14), rgba(30, 95, 191, 0.08));
+        color: var(--blue);
+      }
+      .why-title { font-size: 1.05rem; color: var(--navy); margin-bottom: 8px; }
+      .why-text { color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+
+      /* ---------- Contact ---------- */
+      .contact-panel {
+        max-width: 640px;
+        margin: 0 auto;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 36px;
+      }
+      .contact-panel-head { text-align: center; margin-bottom: 28px; }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+
+      .request-form { display: flex; flex-direction: column; gap: 16px; }
+      .form-field { display: flex; flex-direction: column; gap: 7px; }
+      .form-field span { font-weight: 700; font-size: 0.9rem; color: var(--navy); }
+      .form-field input, .form-field textarea {
+        padding: 12px 14px;
+        border-radius: var(--radius-sm);
+        border: 1.5px solid var(--line);
+        background: #fff;
+        font-size: 0.95rem;
+        color: var(--ink);
+        resize: vertical;
+      }
+      .form-field input:focus, .form-field textarea:focus { outline: none; border-color: var(--blue); }
+
+      .success-panel { text-align: center; padding: 24px 8px; }
+      .success-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: rgba(63, 166, 232, 0.14);
+        color: var(--blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+      }
+      .success-panel h3 { font-size: 1.2rem; color: var(--navy); margin-bottom: 8px; }
+      .success-panel p { color: var(--muted); margin-bottom: 20px; font-size: 0.95rem; }
+
+      /* ---------- Cart drawer ---------- */
+      .drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(11, 23, 48, 0.4);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 150;
+      }
+      .drawer-overlay.is-open { opacity: 1; pointer-events: auto; }
+
+      .cart-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 400px;
+        max-width: 92vw;
+        background: #fff;
+        z-index: 151;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(100%);
+        transition: transform 0.25s ease;
+        box-shadow: -12px 0 32px rgba(11, 23, 48, 0.12);
+      }
+      .cart-drawer.is-open { transform: translateX(0); }
+
+      .drawer-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      .drawer-head h2 { font-size: 1.15rem; }
+
+      .cart-empty {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        color: var(--muted);
+        padding: 20px;
+      }
+
+      .cart-items { flex: 1; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 14px; }
+      .cart-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 12px;
+        background: var(--bg);
+        border-radius: var(--radius-sm);
+      }
+      .cart-item-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--blue);
+      }
+      .cart-item-art { width: 100%; height: 100%; }
+      .cart-item-info { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+      .cart-item-name { font-weight: 700; font-size: 0.9rem; color: var(--navy); line-height: 1.4; }
+      .cart-item-price { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+      .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+      .qty-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        background: #fff;
+        border: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--navy);
+      }
+      .qty-btn:hover { border-color: var(--blue); color: var(--blue); }
+      .qty-value { font-weight: 700; min-width: 18px; text-align: center; }
+      .cart-item-remove { color: var(--muted); padding: 4px; flex-shrink: 0; }
+      .cart-item-remove:hover { color: #C0392B; }
+
+      .cart-foot { padding: 18px 22px 22px; border-top: 1px solid var(--line); }
+      .cart-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin-bottom: 16px;
+        color: var(--navy);
+      }
+      .cart-total-value { color: var(--blue); font-size: 1.2rem; }
+
+      /* ---------- Checkout ---------- */
+      .checkout-banner {
+        background: rgba(63, 166, 232, 0.1);
+        border: 1px solid rgba(63, 166, 232, 0.3);
+        color: var(--navy);
+        padding: 12px 18px;
+        border-radius: var(--radius-sm);
+        font-size: 0.92rem;
+        font-weight: 600;
+        margin-bottom: 32px;
+      }
+      .checkout-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: start; }
+      @media (max-width: 900px) { .checkout-layout { grid-template-columns: 1fr; } }
+      .order-summary {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 24px;
+        position: sticky;
+        top: 96px;
+      }
+      .summary-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 0.92rem; color: var(--muted); border-bottom: 1px solid var(--line); }
+      .summary-total { border-bottom: none; font-weight: 800; color: var(--navy); font-size: 1.05rem; padding-top: 14px; }
+      .checkout-success { max-width: 480px; margin: 0 auto; padding: 60px 20px; }
+
+      /* ---------- Modal ---------- */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(11, 23, 48, 0.45);
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.15s ease;
+      }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      .modal-panel {
+        background: #fff;
+        border-radius: var(--radius);
+        max-width: 520px;
+        width: 100%;
+        max-height: 88vh;
+        overflow-y: auto;
+        animation: modalIn 0.2s ease;
+      }
+      @keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      .modal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--line);
+      }
+      .modal-head h2 { font-size: 1.1rem; }
+      .modal-body { padding: 24px; }
+
+      /* ---------- Toasts ---------- */
+      .toast-stack {
+        position: fixed;
+        bottom: 24px;
+        left: 24px;
+        z-index: 300;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .toast {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--navy);
+        color: #fff;
+        padding: 13px 18px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 8px 24px rgba(11, 23, 48, 0.25);
+        animation: toastIn 0.25s ease;
+        max-width: 320px;
+      }
+      @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      .toast-icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      /* ---------- Footer ---------- */
+      .site-footer {
+        background: var(--navy);
+        color: rgba(255,255,255,0.85);
+        margin-top: 40px;
+      }
+      .footer-inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 48px 24px 32px;
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+      .footer-brand { max-width: 340px; }
+      .footer-logo { height: 40px; filter: brightness(0) invert(1); opacity: 0.95; margin-bottom: 14px; }
+      .footer-blurb { font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.65); }
+      .footer-nav { display: flex; flex-wrap: wrap; gap: 12px 24px; align-content: flex-start; }
+      .footer-link { color: rgba(255,255,255,0.75); font-size: 0.92rem; font-weight: 600; }
+      .footer-link:hover { color: #fff; }
+      .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.12);
+        padding: 18px 24px;
+        max-width: 1240px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        flex-wrap: wrap;
+        font-size: 0.82rem;
+        color: rgba(255,255,255,0.55);
+      }
+
+      @media (max-width: 640px) {
+        .section { padding: 48px 0; }
+        .section-inner { padding: 0 18px; }
+        .header-inner { padding: 10px 16px; }
+        .detail-title { font-size: 1.5rem; }
+      }
+    `}</style>
+  );
+}
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
